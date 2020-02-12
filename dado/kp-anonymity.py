@@ -34,6 +34,7 @@ def find_tuple_with_maximum_ncp(fixed_tuple, time_series, key_fixed_tuple, maxim
         if key != key_fixed_tuple:
             ncp = compute_normalized_certainty_penalty_on_ai([fixed_tuple, time_series[key]], maximum_value, minimum_value)
             if ncp >= max_value:
+                max_value = ncp
                 tuple_with_max_ncp = key
     return tuple_with_max_ncp
 
