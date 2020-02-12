@@ -85,7 +85,7 @@ def k_anonymity_top_down_approach(time_series=None, k_value=None, columns_list=N
                     group_u[u] = time_series[u]
                     last_row = u
                     del time_series[u]
-        # First Round
+        # # First Round
         # if len(time_series) > 1:
         #     v_1 = find_tuple_with_maximum_ncp(group_u[random_tuple], time_series, random_tuple, maximum_value, minimum_value)
         #     logger.info("First round: Find tuple (v1) that has max ncp {}".format(v_1))
@@ -230,7 +230,7 @@ def main(k_value=None, p_value=None, paa_value=None, dataset_path=None):
         # get columns name
         columns = list(time_series.columns)
         columns.pop(0)  # remove product code
-        # save all maximum value for each attribute
+        # save all maximum value for each attribute (column)
         attributes_maximum_value = list()
         attributes_minimum_value = list()
         for column in columns:
@@ -239,6 +239,8 @@ def main(k_value=None, p_value=None, paa_value=None, dataset_path=None):
         time_series_dict = dict()
 
         # save dict file instead pandas
+        # the function iterrows returns both index of the row and content of the row
+        # creates a sort of hashmap, key: product code, value: list of years
         for index, row in time_series.iterrows():
             time_series_dict[row["Product_Code"]] = list(row["W0":"W51"])
 
@@ -281,7 +283,7 @@ def main(k_value=None, p_value=None, paa_value=None, dataset_path=None):
 
             dataset_anonymized.pattern_anonymized_data.append(good_leaf_nodes)
         dataset_anonymized.compute_anonymized_data()
-        dataset_anonymized.save_on_file("Dataset\output.csv")
+        dataset_anonymized.save_on_file("dado\\Dataset\\output.csv")
 
 
 if __name__ == "__main__":
