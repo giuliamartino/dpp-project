@@ -20,7 +20,12 @@ def clean_data(dataset_path_to_clean):
     time_series.to_csv(dataset_path_to_clean.replace(".csv", "_Final.csv"), index=False)
 
 
-def find_tuple_with_maximum_ncp(fixed_tuple, time_series, key_fixed_tuple, maximum_value, minimum_value):
+def find_tuple_with_maximum_ncp(fixed_tuple, time_series_tmp, key_fixed_tuple, maximum_value, minimum_value, excluded_row=None):
+    # While we search the couple which maximizes the NCP, we exclude the last checked row
+    time_series = time_series_tmp.copy()
+    if excluded_row != None:
+        del time_series[excluded_row]
+    
     """
     By scanning all tuples once, we can find tuple t1 that maximizes NCP(fixed_tuple, t1)
     :param fixed_tuple:
@@ -68,11 +73,16 @@ def k_anonymity_top_down_approach(time_series=None, k_value=None, columns_list=N
         logger.info("Get random tuple (u1) {}".format(random_tuple))
         group_u = dict()
         group_v = dict()
-        group_u[random_tuple] = time_series[random_tuple]
-        del time_series[random_tuple]
+        #del time_series[random_tuple]
+        current_row = random_tuple
         last_row = random_tuple
         for round in range(0, rounds*2 - 1):
             if len(time_series) > 0:
+                tmp_row = find_tuple_with_maximum_ncp(time_series[current_row], time_series, last_row, maximum_value, minimum_value, last_row)
+                last_row = current_row
+                current_row = tmp_row
+                
+                '''
                 if round % 2 == 0:
                     v = find_tuple_with_maximum_ncp(group_u[last_row], time_series, last_row, maximum_value, minimum_value)
                     logger.info("{} round: Find tuple (v) that has max ncp {}".format(round +1,v))
@@ -86,6 +96,7 @@ def k_anonymity_top_down_approach(time_series=None, k_value=None, columns_list=N
                     group_u[u] = time_series[u]
                     last_row = u
                     del time_series[u]
+                '''
         # # First Round
         # if len(time_series) > 1:
         #     v_1 = find_tuple_with_maximum_ncp(group_u[random_tuple], time_series, random_tuple, maximum_value, minimum_value)
