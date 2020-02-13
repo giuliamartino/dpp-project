@@ -271,7 +271,7 @@ def main(k_value=None, p_value=None, paa_value=None, dataset_path=None):
             logger.info("Finish Splitting node")
 
             logger.info("Start postprocessing node merge all bad leaf node (if exists) in good "
-                        "leaf node with most similar patter")
+                        "leaf node with most similar pattern")
             for x in good_leaf_nodes:
                 logger.info("Good leaf node {}, {}".format(x.size, x.pattern_representation))
             for x in bad_leaf_nodes:
