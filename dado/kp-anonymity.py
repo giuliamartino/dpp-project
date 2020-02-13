@@ -145,6 +145,33 @@ def k_anonymity_top_down_approach(time_series=None, k_value=None, columns_list=N
                 group_u[key] = row_temp
             del time_series[key]
 
+        if (len(group_u) < k_value) or (len(group_v) < k_value):
+            if len(group_u) < k_value:
+                bad_group = group_u
+                good_group = group_v
+            else:
+                bad_group = group_v
+                good_group = group_u
+
+            missing_rows = k_value - len(bad_group)
+            for i in range(0, missing_rows):
+                index_keys_good_group = [x for x in range(0, len(list(good_group.keys())))]
+                keys = [list(good_group.keys())[x] for x in index_keys_good_group]
+                min_ncp = float('inf')
+                min_ncp_index = ''
+                for key in keys:
+                    row_temp = good_group[key]
+                    bad_group_values = list(bad_group.values())
+                    bad_group_values.append(row_temp)
+                
+                    new_ncp = compute_normalized_certainty_penalty_on_ai(bad_group_values, maximum_value, minimum_value)
+                    if new_ncp < min_ncp:
+                        min_ncp = new_ncp
+                        min_ncp_index = key
+
+                bad_group[min_ncp_index] = good_group[min_ncp_index]
+                del good_group[min_ncp_index]
+
         logger.info("Group u: {}, Group v: {}".format(len(group_u), len(group_v)))
         if len(group_u) > k_value:
             # recursive partition group_u
