@@ -66,74 +66,28 @@ def k_anonymity_top_down_approach(time_series=None, k_value=None, columns_list=N
         # and either time_series_1 or time_series_2 have at least k tuples
         logger.info("Start Partition with size {}".format(len(time_series)))
         keys = list(time_series.keys())
-        rounds = 3
-
+        
         # pick random tuple
         random_tuple = keys[random.randint(0, len(keys) - 1)]
         logger.info("Get random tuple (u1) {}".format(random_tuple))
-        group_u = dict()
-        group_v = dict()
-        #del time_series[random_tuple]
+
+        # Search for the couple of tuples (u,v) which maximizes NCP(u,v)
+        rounds = 3
         current_row = random_tuple
         last_row = random_tuple
-        for round in range(0, rounds*2 - 1):
-            if len(time_series) > 0:
-                tmp_row = find_tuple_with_maximum_ncp(time_series[current_row], time_series, last_row, maximum_value, minimum_value, last_row)
-                last_row = current_row
-                current_row = tmp_row
-                
-                '''
-                if round % 2 == 0:
-                    v = find_tuple_with_maximum_ncp(group_u[last_row], time_series, last_row, maximum_value, minimum_value)
-                    logger.info("{} round: Find tuple (v) that has max ncp {}".format(round +1,v))
-
-                    group_v[v] = time_series[v]
-                    last_row = v
-                    del time_series[v]
-                else:
-                    u = find_tuple_with_maximum_ncp(group_v[last_row], time_series, last_row, maximum_value, minimum_value)
-                    logger.info("{} round: Find tuple (u) that has max ncp {}".format(round+1, u))
-                    group_u[u] = time_series[u]
-                    last_row = u
-                    del time_series[u]
-                '''
-        # # First Round
-        # if len(time_series) > 1:
-        #     v_1 = find_tuple_with_maximum_ncp(group_u[random_tuple], time_series, random_tuple, maximum_value, minimum_value)
-        #     logger.info("First round: Find tuple (v1) that has max ncp {}".format(v_1))
-        #     group_v[v_1] = time_series[v_1]
-        #     del time_series[random_tuple]
-        #
-        # # Second Round
-        # if len(time_series) > 1:
-        #     u_2 = find_tuple_with_maximum_ncp(group_v[v_1], time_series, v_1, maximum_value, minimum_value)
-        #     logger.info("Second Round: Find tuple (u2) that has max ncp {}".format(u_2))
-        #     group_u[u_2] = time_series[u_2]
-        #     del time_series[v_1]
-        #
-        # # Third Round
-        # if len(time_series) > 1:
-        #     v_2 = find_tuple_with_maximum_ncp(group_u[u_2], time_series, u_2, maximum_value, minimum_value)
-        #     logger.info("Third Round: Find tuple (v2) that has max ncp {}".format(v_2))
-        #     group_v[v_2] = time_series[v_2]
-        #     del time_series[u_2]
-        #
-        # # Four round
-        # if len(time_series) > 1:
-        #     u_3 = find_tuple_with_maximum_ncp(group_v[v_2], time_series, v_2, maximum_value, minimum_value)
-        #     logger.info("Four Round: find tuple (u3) that has max ncp {}".format(u_3))
-        #     group_u[u_3] = time_series[u_3]
-        #     del time_series[v_2]
-        #
-        # # Five Round
-        # if len(time_series) > 1:
-        #     v_3 = find_tuple_with_maximum_ncp(group_u[u_3], time_series, u_3, maximum_value, minimum_value)
-        #     logger.info("Five Round: find tuple (v3) that has max ncp {}".format(v_3))
-        #     group_v[v_3] = time_series[v_3]
-        #     del time_series[u_3]
-        #     del time_series[v_3]
-
-        # Now Assigned to group with lower uncertain penality
+        for round in range(0, rounds):
+            tmp_row = find_tuple_with_maximum_ncp(time_series[current_row], time_series, last_row, maximum_value, minimum_value)
+            last_row = current_row
+            current_row = tmp_row
+            
+        # The couple (u,v) is (current_row, last_row)
+        # Now we use u,v as seeds to create two groups with lower certainty penality
+        group_u = dict()
+        group_v = dict()
+        group_u[current_row] = time_series[current_row]
+        del time_series[current_row]
+        group_v[last_row] = time_series[last_row]
+        del time_series[last_row]
         index_keys_time_series = [x for x in range(0, len(list(time_series.keys())))]
         random.shuffle(index_keys_time_series)
         # add random row to group with lower NCP
