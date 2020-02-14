@@ -11,10 +11,10 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "args": [
-                "8",
+                "4",
                 "2",
                 "1",
-                "dado\\Dataset\\Piccolo.csv"]
+                "datasets\\UrbanPopulation.csv"]
         }
     ]
 }

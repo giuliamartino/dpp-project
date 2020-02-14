@@ -1,13 +1,16 @@
 import os
-import numpy as np
-import pandas as pd
 import sys
 import random
+import numpy as np
+import pandas as pd
 from loguru import logger
 import k_anonymity as ka
-#from node import Node
-#from dataset_anonymized import DatasetAnonymized
-max_level = 4
+import p_anonymity as pa
+from node import Node
+from dataset import Dataset
+
+# Global Variables
+max_level = 6 # Max admitted level of a node in tree structure (KAPRA Algorithm)
 
 def main(k_value=None, p_value=None, paa_value=None, dataset_path=None):
     """
@@ -15,6 +18,9 @@ def main(k_value=None, p_value=None, paa_value=None, dataset_path=None):
     :param p_value:  Value of p attribute
     :param dataset_path:  Path to the dataset to anonymize (.csv)
     """
+
+    # ----------------------------------------------------- Start Dataset Preparation
+    logger.info("Preparing dataset")
     if os.path.isfile(dataset_path):
         # Read the time series from a .csv file
         time_series = pd.read_csv(dataset_path)
@@ -37,6 +43,14 @@ def main(k_value=None, p_value=None, paa_value=None, dataset_path=None):
     for index, row in time_series.iterrows():
         time_series_dict[row["CountryCode"]] = list(row["1960":"2015"])
 
+    # ----------------------------------------------------- End Dataset Preparation
+
+    # ----------------------------------------------------- Start KAPRA Algorithm
+    logger.info("Start of KAPRA Algorithm")
+    pa.KAPRA(time_series_dict, p_value, paa_value, max_level)
+    logger.info("End of KAPRA Algorithm")
+    # ----------------------------------------------------- End KAPRA Algorithm
+    '''
     # Start k-anonymity top-down approach
     time_series_k_anonymized = list()
     time_series_dict_copy = time_series_dict.copy()
@@ -45,12 +59,7 @@ def main(k_value=None, p_value=None, paa_value=None, dataset_path=None):
                                     maximum_value=attributes_maximum_value, minimum_value=attributes_minimum_value,
                                     time_series_k_anonymized=time_series_k_anonymized)
     logger.info("End k-anonymity top-down approach")
-
-    logger.info("Start p-anonymity KAPRA Algorithm")
-    logger.info("End p-anonymity KAPRA Algorithm")
-
-
-    
+    ''' 
 
 if __name__ == "__main__":
 

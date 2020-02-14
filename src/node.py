@@ -7,28 +7,30 @@ from saxpy.paa import paa
 
 
 class Node:
-
+    id = 0
     def __init__(self, level: int = 1, pattern_representation: str = "", label: str = "intermediate",
                  group: dict = None, parent=None, paa_value: int = 3):
-        self.level = level  # number of different char for rappresentation
+        self.level = level  # Number of different char for rappresentation
         self.paa_value = paa_value
         if pattern_representation == "":
-            pr = "a"*self.paa_value  # using SAX
+            pr = "a"*self.paa_value  # Using SAX
             self.pattern_representation = pr
         else:
             self.pattern_representation = pattern_representation
-        self.members = list(group.keys())  # members   time series contained in N
-        self.size = len(group)  # number of time series contained
-        self.label = label  # each node has tree possible labels: bad-leaf, good-leaf or intermediate
-        self.group = group  # group obtained from k-anonymity top-down
-        self.child_node = list()  # all childs node
-        # self.left = None  # left child
-        # self.right = None  # right child
-        self.parent = parent  # parent
+        self.members = list(group.keys())  # All tuple keys contained in N
+        self.size = len(group)  # Number of time series contained
+        self.label = label  # Each node has tree possible labels: bad-leaf, good-leaf or intermediate
+        self.group = group  # All tuples contained in the node
+        self.child_node = list()  # All child nodes
+        # self.left = None  # Left child
+        # self.right = None  # Right child
+        self.parent = parent  # Parent
+        Node.id += 1
+        self.name = '{}'.format(Node.id)
 
     def start_splitting(self, p_value: int, max_level: int, good_leaf_nodes: list(), bad_leaf_nodes: list()):
         """
-        Splitting Node Naive algorithm (k, P) Anonymity
+        Splitting Node Phase
         :param p_value:
         :param max_level:
         :param paa_value
@@ -49,10 +51,12 @@ class Node:
 
         if p_value <= self.size < 2*p_value:
             logger.info("Maximize-level, size:{}, p_value:{} == good-leaf".format(self.size, p_value))
-            self.maximize_level_node(max_level)
+            # Facendo finta di aver capito cosa fa la funzione qui sotto
+            self.maximize_node_level(max_level)
             self.label = "good-leaf"
             good_leaf_nodes.append(self)
             return
+
         """
         Otherwise, we need to check if node N has to be split. The checking relies on a tentative split performed on N. 
         Suppose that, by increasing the level of N, N is tentatively split into a number of child nodes. 
@@ -132,11 +136,11 @@ class Node:
                 self.child_node.append(node_merge)
                 good_leaf_nodes.append(node_merge)
 
-                nc = len(tg_nodes) + len(tb_nodes)  # tb_nodes sono un po' perplesso su questo tb_nodes
+                nc = len(tg_nodes) + len(tb_nodes) # tb_nodes sono un po' perplesso su questo tb_nodes
                 logger.info("Split only tg_nodes {0}".format(len(tg_nodes)))
                 if nc >= 2:
                     for index in range(0, len(tg_nodes)):
-                        node = Node(level=self.level, pattern_representation=pattern_representation_tg[index],
+                        node = Node(level=(self.level + 1), pattern_representation=pattern_representation_tg[index],
                                     label="intermediate", group=tg_nodes[index], parent=self)
                         self.child_node.append(node)
                         node.start_splitting(p_value, max_level, good_leaf_nodes, bad_leaf_nodes)
@@ -149,15 +153,16 @@ class Node:
 
             else:
                 nc = len(tg_nodes) + len(tb_nodes)  # tb_nodes sono un po' perplesso su questo tb_nodes
+                nc_OK = True if (nc >= 2) else False
                 logger.info("Label all tb_node {0} as bad-leaf and split only tg_nodes {1}".format(len(tb_nodes),len(tg_nodes)))
                 for index in range(0, len(tb_nodes)):
-                    node = Node(level=self.level, pattern_representation=pattern_representation_tb[index], label="bad-leaf",
+                    node = Node(level=(self.level + nc_OK), pattern_representation=pattern_representation_tb[index], label="bad-leaf",
                                 group=tb_nodes[index], parent=self)
                     self.child_node.append(node)
                     bad_leaf_nodes.append(node)
                 if nc >= 2:
                     for index in range(0, len(tg_nodes)):
-                        node = Node(level=self.level, pattern_representation=pattern_representation_tg[index],
+                        node = Node(level=(self.level + 1), pattern_representation=pattern_representation_tg[index],
                                     label="intermediate", group=tg_nodes[index], parent=self)
                         self.child_node.append(node)
                         node.start_splitting(p_value, max_level, good_leaf_nodes, bad_leaf_nodes)
@@ -200,11 +205,12 @@ class Node:
         node_original.members = list(node_original.group.keys())
         node_original.size = len(node_original.group)
 
-    def maximize_level_node(self, max_level):
+    # TODO capire cosa cazzo fa sta funzione :)
+    def maximize_node_level(self, max_level):
         """
-        Try to maximaxe the level value
-        :param p_value:
-        :return:
+        Try to maximaxe the level value of the node
+        :param self:  The node whose level has to be maximized
+        :param max_level:  Max value of level
         """
         values_group = list(self.group.values())
         original_level = self.level

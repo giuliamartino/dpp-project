@@ -1,9 +1,9 @@
 import os
+import sys
+import random
 import numpy as np
 import pandas as pd
-import sys
 from loguru import logger
-import random
 
 
 def compute_normalized_certainty_penalty_on_ai(table=None, maximum_value=None, minimum_value=None):
