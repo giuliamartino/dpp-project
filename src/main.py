@@ -2,16 +2,54 @@ import os
 import numpy as np
 import pandas as pd
 import sys
-from loguru import logger
 import random
+from loguru import logger
+import k_anonymity as ka
 #from node import Node
 #from dataset_anonymized import DatasetAnonymized
 max_level = 4
 
 def main(k_value=None, p_value=None, paa_value=None, dataset_path=None):
-    print(k_value)
-    print(p_value)
-    print(paa_value)
+    """
+    :param k_value:  Value of k attribute
+    :param p_value:  Value of p attribute
+    :param dataset_path:  Path to the dataset to anonymize (.csv)
+    """
+    if os.path.isfile(dataset_path):
+        # Read the time series from a .csv file
+        time_series = pd.read_csv(dataset_path)
+
+    # Get attributes names (columns)
+    columns = list(time_series.columns)
+    columns.pop(0)  # Remove first column (Country Code)
+    # Save all maximum/minimum values for each column
+    attributes_maximum_value = list()
+    attributes_minimum_value = list()
+    for column in columns:
+        attributes_maximum_value.append(time_series[column].max())
+        attributes_minimum_value.append(time_series[column].min())
+
+    # Build a sort of hashmap - the keys are the Country Codes, the values are all the other columns (the tuple)
+    time_series_dict = dict()
+
+    # The function iterrows returns both index of the row and content of the current row
+    # pylint: disable=W0612
+    for index, row in time_series.iterrows():
+        time_series_dict[row["CountryCode"]] = list(row["1960":"2015"])
+
+    # Start k-anonymity top-down approach
+    time_series_k_anonymized = list()
+    time_series_dict_copy = time_series_dict.copy()
+    logger.info("Start k-anonymity top-down approach")
+    ka.k_anonymity_top_down_approach(time_series=time_series_dict_copy, k_value=k_value, columns_list=columns,
+                                    maximum_value=attributes_maximum_value, minimum_value=attributes_minimum_value,
+                                    time_series_k_anonymized=time_series_k_anonymized)
+    logger.info("End k-anonymity top-down approach")
+
+    logger.info("Start p-anonymity KAPRA Algorithm")
+    logger.info("End p-anonymity KAPRA Algorithm")
+
+
     
 
 if __name__ == "__main__":

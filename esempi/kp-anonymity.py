@@ -35,6 +35,7 @@ def find_tuple_with_maximum_ncp(fixed_tuple, time_series_tmp, key_fixed_tuple, m
     """
     max_value = 0
     tuple_with_max_ncp = None
+    # pylint: disable=W0612
     for key, value in time_series.items():
         if key != key_fixed_tuple:
             ncp = compute_normalized_certainty_penalty_on_ai([fixed_tuple, time_series[key]], maximum_value, minimum_value)
@@ -75,8 +76,9 @@ def k_anonymity_top_down_approach(time_series=None, k_value=None, columns_list=N
         rounds = 3
         current_row = random_tuple
         last_row = random_tuple
+        # pylint: disable=W0612
         for round in range(0, rounds):
-            tmp_row = find_tuple_with_maximum_ncp(time_series[current_row], time_series, last_row, maximum_value, minimum_value)
+            tmp_row = find_tuple_with_maximum_ncp(time_series[current_row], time_series, current_row, maximum_value, minimum_value)
             last_row = current_row
             current_row = tmp_row
             
@@ -234,6 +236,7 @@ def main(k_value=None, p_value=None, paa_value=None, dataset_path=None):
         # save dict file instead pandas
         # the function iterrows returns both index of the row and content of the row
         # creates a sort of hashmap, key: product code, value: list of years
+        # pylint: disable=W0612
         for index, row in time_series.iterrows():
             time_series_dict[row["Product_Code"]] = list(row["W0":"W51"])
 
