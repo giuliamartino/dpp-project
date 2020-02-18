@@ -21,6 +21,6 @@ def KAPRA(time_series_dict=None, p_value=None, paa_value=None, max_level=None):
     node.start_splitting(p_value, max_level, good_leaf_nodes, bad_leaf_nodes)
     logger.info("Finish recursive splitting")
     logger.info("Start recycling bad leaves")
-    dataset.recycle_bad_leaves(good_leaf_nodes=good_leaf_nodes, bad_leaf_nodes=bad_leaf_nodes, p_value=p_value)
+    dataset.recycle_bad_leaves(good_leaf_nodes, bad_leaf_nodes, p_value)
     logger.info("End recycling bad leaves")
     
