@@ -152,7 +152,6 @@ class Node:
                 self.child_node.append(node)
                 node.start_splitting(p_value, max_level, good_leaf_nodes, bad_leaf_nodes)
             
-
     @staticmethod
     def postprocessing(good_leaf_nodes, bad_leaf_nodes):
         # count = sum(1 for a, b in zip(seq1, seq2) if a != b)
@@ -238,7 +237,6 @@ class Node:
             pr_2 = ts_to_string(data_paa, cuts_for_asize(temp_level))
             if pr_2 != pr:
                 equal = False
-                print("ERROREEEEEEEEEEEEE")
                 break
         if equal:
             self.level = temp_level

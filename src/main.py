@@ -47,19 +47,43 @@ def main(k_value=None, p_value=None, paa_value=None, dataset_path=None):
 
     # ----------------------------------------------------- Start KAPRA Algorithm
     logger.info("Start of KAPRA Algorithm")
-    pa.KAPRA(time_series_dict, p_value, paa_value, max_level)
+    dataset = pa.KAPRA(time_series_dict, p_value, paa_value, max_level)
     logger.info("End of KAPRA Algorithm")
     # ----------------------------------------------------- End KAPRA Algorithm
-    '''
-    # Start k-anonymity top-down approach
-    time_series_k_anonymized = list()
-    time_series_dict_copy = time_series_dict.copy()
-    logger.info("Start k-anonymity top-down approach")
-    ka.k_anonymity_top_down_approach(time_series=time_series_dict_copy, k_value=k_value, columns_list=columns,
-                                    maximum_value=attributes_maximum_value, minimum_value=attributes_minimum_value,
-                                    time_series_k_anonymized=time_series_k_anonymized)
-    logger.info("End k-anonymity top-down approach")
-    ''' 
+
+    # Preprocessing
+    for node in dataset.p_data:
+        if len(node.group) >= 2*p_value:
+            split_group = list()
+            group_copy = node.group.copy()
+            attributes_maximum_value = list()
+            attributes_minimum_value = list()
+            for column in columns:
+                attributes_maximum_value.append(time_series[column].max())
+                attributes_minimum_value.append(time_series[column].min())
+            ka.k_anonymity_top_down_approach(time_series=group_copy, k_value=k_value, columns_list=columns,
+                                            maximum_value=attributes_maximum_value, minimum_value=attributes_minimum_value,
+                                            time_series_k_anonymized=split_group)
+            dataset.p_data.remove(node)
+            for group in split_group:
+                node = Node(level=node.level, pattern_representation=node.pattern_representation,
+                                  label="good-leaf", group=group, parent=node.parent, paa_value=node.paa_value)
+                dataset.p_data.append(node)
+
+    # K-anonymity
+    # Step 1
+    for node in dataset.p_data:
+        if len(node.group) >= k_value:
+            dataset.kp_data.append(node)
+            dataset.p_data.remove(node)
+
+    # Step 2
+    tuples_list = list(node.values())
+    ka.compute_instant_value_loss(tuples_list)
+    
+            
+
+ 
 
 if __name__ == "__main__":
 

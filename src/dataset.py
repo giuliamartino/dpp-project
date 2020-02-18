@@ -3,9 +3,10 @@ from loguru import logger
 from node import Node
 
 class Dataset:
-    def __init__(self, data: list = list(), p_data: list = list()):
+    def __init__(self, data: list = list(), p_data: list = list(), kp_data: list = list()):
         self.data = data
         self.p_data = p_data
+        self.kp_data = kp_data
         self.final_data = dict()
 
     def compute_anonymized_data(self):

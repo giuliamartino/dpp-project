@@ -190,3 +190,38 @@ def k_anonymity_top_down_approach(time_series=None, k_value=None, columns_list=N
                                           time_series_k_anonymized=time_series_k_anonymized)
         else:
             time_series_k_anonymized.append(group_v)
+
+def compute_instant_value_loss(table=None):
+    attributes_maximum_value = [0] * len(table(0))
+    attributes_minimum_value = [0] * len(table(0))
+    for row in range(0, len(table)):
+        for column in range(0, len(table(row))):
+            if table[row][column] > attributes_maximum_value[column]:
+                attributes_maximum_value[column] = table[row][column]
+            if table[row][column] < attributes_minimum_value[column]:
+                attributes_minimum_value[column] = table[row][column]
+
+    '''
+    z_1 = list()
+    y_1 = list()
+    a = list()
+    for index_attribute in range(0, len(table[0])):
+        temp_z1 = 0
+        temp_y1 = float('inf')
+        for row in table:
+            if row[index_attribute] > temp_z1:
+                temp_z1 = row[index_attribute]
+            if row[index_attribute] < temp_y1:
+                temp_y1 = row[index_attribute]
+        z_1.append(temp_z1)
+        y_1.append(temp_y1)
+        a.append(abs(maximum_value[index_attribute] - minimum_value[index_attribute]))
+    ncp_t = 0
+    for index in range(0, len(z_1)):
+        try:
+            ncp_t += (z_1[index] - y_1[index]) / a[index]
+        except ZeroDivisionError:
+            ncp_t += 0
+    ncp_T = len(table)*ncp_t
+    return ncp_T
+    '''
