@@ -36,8 +36,8 @@ class Dataset:
                 logger.info(value_row)
             logger.info("Finish creation Group {}".format(index))
 
-    def save_on_file(self, name_file):
-        with open(name_file, "w") as file_to_write:
+    def save_on_file(self, file_name):
+        with open(file_name, "w") as file_to_write:
             value_to_print_on_file = ""
             for key, value in self.final_data.items():
                 value_to_print_on_file = key
@@ -65,7 +65,8 @@ class Dataset:
                         current_PRs[node.pattern_representation] = 1
                         current_leaves[node.pattern_representation] = list()
                     else:
-                        current_to_merge.append(node.pattern_representation)
+                        if node.pattern_representation not in current_to_merge:
+                            current_to_merge.append(node.pattern_representation)
                         current_PRs[node.pattern_representation] += 1
             
                     current_leaves[node.pattern_representation].append(node.name)
@@ -73,13 +74,14 @@ class Dataset:
             while len(current_to_merge) > 0:
                 current_pattern_representation = current_to_merge.pop(0)
                 merge_node_group = dict()
-                removed_nodes = len(current_leaves[current_pattern_representation])
+                removed_tuples = 0
                 for node in current_leaves[current_pattern_representation]:
                     bad_leaf_nodes.remove(names_to_nodes[node])
                     for key, value in names_to_nodes[node].group.items():
                         merge_node_group[key] = value
+                        removed_tuples += 1
                 if len(merge_node_group) >= p_value:
-                    tot_bad_size -= removed_nodes
+                    tot_bad_size -= removed_tuples
                     merge_node = Node(level=current_level, pattern_representation=current_pattern_representation,
                                     label="good-leaf", group=merge_node_group, paa_value=paa_value)
                     good_leaf_nodes.append(merge_node)
@@ -87,20 +89,10 @@ class Dataset:
                     merge_node = Node(level=current_level, pattern_representation=current_pattern_representation,
                                     label="bad-leaf", group=merge_node_group, paa_value=paa_value)
                     bad_leaf_nodes.append(merge_node)
-            
+
+            for node in bad_leaf_nodes:
+                if node.level == current_level:
+                    node.decrease_node_level()
             current_level -= 1
         
         self.p_data = good_leaf_nodes
-        
-
-            
-
-
-
-                
-
-
-                    
-
-
-

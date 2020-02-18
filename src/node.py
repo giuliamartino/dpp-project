@@ -51,7 +51,6 @@ class Node:
 
         if p_value <= self.size < 2*p_value:
             logger.info("Maximize-level, size:{}, p_value:{} == good-leaf".format(self.size, p_value))
-            # Facendo finta di aver capito cosa fa la funzione qui sotto
             self.maximize_node_level(max_level)
             self.label = "good-leaf"
             good_leaf_nodes.append(self)
@@ -138,7 +137,7 @@ class Node:
 
             # Not merged bad nodes
             else: 
-                logger.info("Label all tb_node {0} as bad-leaf".format(len(tb_nodes),len(tg_nodes)))
+                logger.info("Label all tb_node {0} as bad-leaf".format(len(tb_nodes)))
                 # Append bad nodes to global list
                 for index in range(0, len(tb_nodes)):
                     node = Node(level=(self.level + 1), pattern_representation=pattern_representation_tb[index], 
@@ -186,7 +185,6 @@ class Node:
         node_original.members = list(node_original.group.keys())
         node_original.size = len(node_original.group)
 
-    # TODO capire cosa cazzo fa sta funzione :)
     def maximize_node_level(self, max_level):
         """
         Try to maximaxe the level value of the node
@@ -218,5 +216,31 @@ class Node:
             data_paa = paa(data_znorm, self.paa_value)
             self.pattern_representation = ts_to_string(data_paa, cuts_for_asize(self.level))
         else:
-            logger.info("Can't split again, max level already reached")
+            logger.info("Can't increase more, max possible level already reached")
+
+    def decrease_node_level(self):
+        """
+        Decrease the level of the node
+        :param self:  The node whose level has to be decremented
+        :param max_level:  Max value of level
+        """
+        values_group = list(self.group.values())
+        temp_level = self.level - 1
+        data = np.array(values_group[0])
+        data_znorm = znorm(data)
+        data_paa = paa(data_znorm, self.paa_value)
+        pr = ts_to_string(data_paa, cuts_for_asize(temp_level))
+        equal = True
+        for index in range(1, len(values_group)):
+            data = np.array(values_group[index])
+            data_znorm = znorm(data)
+            data_paa = paa(data_znorm, self.paa_value)
+            pr_2 = ts_to_string(data_paa, cuts_for_asize(temp_level))
+            if pr_2 != pr:
+                equal = False
+                print("ERROREEEEEEEEEEEEE")
+                break
+        if equal:
+            self.level = temp_level
+            self.pattern_representation = pr
 
