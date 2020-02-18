@@ -128,7 +128,7 @@ class Node:
                     for key, value in tb_node.items():
                         child_merge_node_group[key] = value
                 node_merge = Node(level=self.level, pattern_representation=self.pattern_representation,
-                                  label="good-leaf", group=child_merge_node_group, parent=self)
+                                  label="good-leaf", group=child_merge_node_group, parent=self
                 self.child_node.append(node_merge)
                 good_leaf_nodes.append(node_merge)
 

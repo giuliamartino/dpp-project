@@ -44,7 +44,7 @@ class Dataset:
                 value_to_print_on_file = "{},{}".format(value_to_print_on_file, ",".join(value))
                 file_to_write.write(value_to_print_on_file+"\n")
 
-    def recycle_bad_leaves(self, good_leaf_nodes=None, bad_leaf_nodes=None, p_value=None):
+    def recycle_bad_leaves(self, good_leaf_nodes=None, bad_leaf_nodes=None, p_value=None, paa_value=None):
         max_bad_level = 0
         tot_bad_size = 0
         # Find max level and total size of bad_leaf_nodes
@@ -81,11 +81,11 @@ class Dataset:
                 if len(merge_node_group) >= p_value:
                     tot_bad_size -= removed_nodes
                     merge_node = Node(level=current_level, pattern_representation=current_pattern_representation,
-                                    label="good-leaf", group=merge_node_group)
+                                    label="good-leaf", group=merge_node_group, paa_value=paa_value)
                     good_leaf_nodes.append(merge_node)
                 else:
                     merge_node = Node(level=current_level, pattern_representation=current_pattern_representation,
-                                    label="bad-leaf", group=merge_node_group)
+                                    label="bad-leaf", group=merge_node_group, paa_value=paa_value)
                     bad_leaf_nodes.append(merge_node)
             
             current_level -= 1
