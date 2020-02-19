@@ -1,1 +1,7 @@
 nc sparito
+step 1: si hanno dimensioni dei gruppi s:           k <= |s| <= 2k
+
+cose da fare:
+test con diversi paa_value, k, p, e calcolare NCP in ciascun test
+vedere come cambiano le cose se teniamo o togliamo la tupla dai round
+
