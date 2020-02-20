@@ -3,10 +3,10 @@ import sys
 import random
 import numpy as np
 import pandas as pd
-from loguru import logger
 import k_anonymity as ka
 import p_anonymity as pa
 from node import Node
+from loguru import logger
 from dataset import Dataset
 
 # Global Variables
@@ -70,13 +70,11 @@ def main(k_value=None, p_value=None, paa_value=None, file_name=None):
     logger.info("End of generalization")
     # ----------------------------------------------------- End generalization
 
-    # ----------------------------------------------------- Start generalization
+    # ----------------------------------------------------- Start printing
     logger.info("Printing on file..")
     dataset.save_on_file("outputs\\" + file_name, first_column, columns)
     logger.info("Output created in outputs folder")
-    # ----------------------------------------------------- End generalization
-
- 
+    # ----------------------------------------------------- End printing
 
 if __name__ == "__main__":
 

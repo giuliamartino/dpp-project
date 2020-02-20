@@ -10,9 +10,7 @@ from dataset import Dataset
 from decimal import Decimal, getcontext
 from random import randint
 
-
 def compute_normalized_certainty_penalty_on_ai(table=None, maximum_value=None, minimum_value=None):
-    # TODO check if |Ai| should be calculate on original table or not
     """
     Compute NCP(T)
     :param table:  The table used to calculate NCP
@@ -41,12 +39,7 @@ def compute_normalized_certainty_penalty_on_ai(table=None, maximum_value=None, m
     ncp_T = len(table)*ncp_t
     return ncp_T
 
-def find_tuple_with_maximum_ncp(fixed_tuple, time_series_tmp, key_fixed_tuple, maximum_value, minimum_value, excluded_row=None):
-    # While we search the couple which maximizes the NCP, we exclude the last checked row
-    time_series = time_series_tmp.copy()
-    if excluded_row != None:
-        del time_series[excluded_row]
-    
+def find_tuple_with_maximum_ncp(fixed_tuple, time_series, key_fixed_tuple, maximum_value, minimum_value):
     """
     By scanning all tuples once, we can find tuple t1 that maximizes NCP(fixed_tuple, t1)
     :param fixed_tuple:
@@ -97,8 +90,6 @@ def k_anonymity_top_down_approach(time_series=None, k_value=None, columns_list=N
         time_series_k_anonymized.append(time_series)
         return
     else:
-        # TODO compute max and minumum_value for each recursive methods
-
         # Partition time_series into two exclusive subsets group_u and group_v
         # such that group_u and group_v are more local than time_series,
         # and either group_u or group_v have at least k tuples
@@ -138,9 +129,7 @@ def k_anonymity_top_down_approach(time_series=None, k_value=None, columns_list=N
             group_v_values = list(group_v.values())
             group_u_values.append(row_temp)
             group_v_values.append(row_temp)
-            # max_temp_value_u, min_temp_value_u = get_list_min_and_max_from_table(group_u_values)
-            # max_temp_value_v, min_temp_value_v = get_list_min_and_max_from_table(group_v_values)
-
+           
             ncp_u = compute_normalized_certainty_penalty_on_ai(group_u_values, maximum_value, minimum_value)
             ncp_v = compute_normalized_certainty_penalty_on_ai(group_v_values, maximum_value, minimum_value)
 
@@ -180,7 +169,6 @@ def k_anonymity_top_down_approach(time_series=None, k_value=None, columns_list=N
         logger.info("Group u: {}, Group v: {}".format(len(group_u), len(group_v)))
         if len(group_u) > k_value:
             # Recursive partition of group_u
-            # maximum_value, minimum_value = get_list_min_and_max_from_table(list(group_u.values()))
             k_anonymity_top_down_approach(time_series=group_u, k_value=k_value, columns_list=columns_list,
                                           maximum_value=maximum_value, minimum_value=minimum_value,
                                           time_series_k_anonymized=time_series_k_anonymized)
@@ -189,7 +177,6 @@ def k_anonymity_top_down_approach(time_series=None, k_value=None, columns_list=N
 
         if len(group_v) > k_value:
             # Recursive partition of group_v
-            # maximum_value, minimum_value = get_list_min_and_max_from_table(list(group_v.values()))
             k_anonymity_top_down_approach(time_series=group_v, k_value=k_value, columns_list=columns_list,
                                           maximum_value=maximum_value, minimum_value=minimum_value,
                                           time_series_k_anonymized=time_series_k_anonymized)

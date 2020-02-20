@@ -3,8 +3,6 @@ from loguru import logger
 from node import Node
 from dataset import Dataset
 
-
-
 def KAPRA(time_series_dict=None, p_value=None, paa_value=None, max_level=None):
     """
     Implementation of KAPRA Algorithm for time-series anonymization and pattern preservation
@@ -24,5 +22,3 @@ def KAPRA(time_series_dict=None, p_value=None, paa_value=None, max_level=None):
     dataset.recycle_bad_leaves(good_leaf_nodes, bad_leaf_nodes, p_value, paa_value)
     logger.info("End recycling bad leaves")
     return dataset
-
-    

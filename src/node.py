@@ -5,7 +5,6 @@ from saxpy.alphabet import cuts_for_asize
 from loguru import logger
 from saxpy.paa import paa
 
-
 class Node:
     id = 0
     def __init__(self, level: int = 1, pattern_representation: str = "", label: str = "intermediate",
