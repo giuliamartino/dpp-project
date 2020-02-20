@@ -39,14 +39,6 @@ class Dataset:
                 logger.info(value_row)
             logger.info("Finish creation Group {}".format(index))
 
-    def save_on_file(self, file_name):
-        with open(file_name, "w") as file_to_write:
-            value_to_print_on_file = ""
-            for key, value in self.final_data.items():
-                value_to_print_on_file = key
-                value_to_print_on_file = "{},{}".format(value_to_print_on_file, ",".join(value))
-                file_to_write.write(value_to_print_on_file+"\n")
-
     def recycle_bad_leaves(self, good_leaf_nodes=None, bad_leaf_nodes=None, p_value=None, paa_value=None):
         max_bad_level = 0
         tot_bad_size = 0
@@ -99,3 +91,14 @@ class Dataset:
             current_level -= 1
         
         self.p_data = good_leaf_nodes
+
+    def generalize(self):
+        return "end"
+
+    def save_on_file(self, file_name):
+        with open(file_name, "w") as file_to_write:
+            value_to_print_on_file = ""
+            for key, value in self.final_data.items():
+                value_to_print_on_file = key
+                value_to_print_on_file = "{},{}".format(value_to_print_on_file, ",".join(value))
+                file_to_write.write(value_to_print_on_file+"\n")

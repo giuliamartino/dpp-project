@@ -7,6 +7,8 @@ import pandas as pd
 from loguru import logger
 from node import Node
 from dataset import Dataset
+from decimal import Decimal, getcontext
+from random import randint
 
 
 def compute_normalized_certainty_penalty_on_ai(table=None, maximum_value=None, minimum_value=None):
@@ -194,9 +196,9 @@ def k_anonymity_top_down_approach(time_series=None, k_value=None, columns_list=N
         else:
             time_series_k_anonymized.append(group_v)
 
-def compute_instant_value_loss(table=None):
+def compute_instant_value_loss(table=None, ncp=False):
     attributes_maximum_value = [0] * len(table[0])
-    attributes_minimum_value = [0] * len(table[0])
+    attributes_minimum_value = [float('inf')] * len(table[0])
     for row in range(0, len(table)):
         for column in range(0, len(table[row])):
             if table[row][column] > attributes_maximum_value[column]:
@@ -204,12 +206,18 @@ def compute_instant_value_loss(table=None):
             if table[row][column] < attributes_minimum_value[column]:
                 attributes_minimum_value[column] = table[row][column]
 
+    if ncp:
+        return compute_normalized_certainty_penalty_on_ai(table, attributes_maximum_value, attributes_minimum_value)
+
     total_sum = 0
     for i in range(0,len(attributes_maximum_value)):
-        total_sum += (attributes_maximum_value[i] - attributes_minimum_value[i]) ** 2
+        step = (attributes_maximum_value[i] - attributes_minimum_value[i]) ** 2
+        total_sum += step
 
-    ivl_T = math.sqrt(total_sum / len(attributes_maximum_value))
-    return ivl_T
+    getcontext().prec = 30
+    n_columns = len(attributes_maximum_value)
+    ivl_T = Decimal(Decimal(total_sum) / Decimal(n_columns)).sqrt()
+    return [total_sum, ivl_T]
     
 def create_k_groups(dataset: Dataset = None, k_value = None, p_value = None, columns = None): 
     # Preprocessing
@@ -259,8 +267,8 @@ def create_k_groups(dataset: Dataset = None, k_value = None, p_value = None, col
         for node in dataset.p_data:
             tuples_list = list(node.group.values())
             current_inst_value_loss = compute_instant_value_loss(tuples_list)
-            if current_inst_value_loss < min_inst_value_loss:
-                min_inst_value_loss = current_inst_value_loss
+            if current_inst_value_loss[1] < min_inst_value_loss:
+                min_inst_value_loss = current_inst_value_loss[1]
                 min_node = node
         new_group = min_node.group
         dataset.p_data.remove(min_node)
@@ -274,8 +282,8 @@ def create_k_groups(dataset: Dataset = None, k_value = None, p_value = None, col
                 tmp_group = list(node.group.values())
                 current_group = current_group + tmp_group
                 current_inst_value_loss = compute_instant_value_loss(current_group)
-                if current_inst_value_loss < min_inst_value_loss:
-                    min_inst_value_loss = current_inst_value_loss
+                if current_inst_value_loss[1] < min_inst_value_loss:
+                    min_inst_value_loss = current_inst_value_loss[1]
                     min_node = node
             new_group.update(min_node.group)
             dataset.p_data.remove(min_node)
@@ -294,12 +302,18 @@ def create_k_groups(dataset: Dataset = None, k_value = None, p_value = None, col
             current_group = current_group + tmp_group
             current_inst_value_loss = compute_instant_value_loss(current_group)
             current_ivl.append(current_inst_value_loss)
-            if current_inst_value_loss < min_inst_value_loss:
-                min_inst_value_loss = current_inst_value_loss
-                min_group = group
+            if current_inst_value_loss[1] <= min_inst_value_loss:
+                if current_inst_value_loss[1] < min_inst_value_loss:
+                    min_inst_value_loss = current_inst_value_loss[1]
+                    min_group_list = list()
+                min_group_list.append(group)
+        # Choose a random group to merge from the ones which have the same Instant Value Loss
+        min_group = min_group_list[randint(0, (len(min_group_list) - 1))]
         ivl.append(current_ivl)
         min_group.update(node.group)
         dataset.p_data.remove(node)
+    
+    return dataset
 
 
         

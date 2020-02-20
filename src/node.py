@@ -223,6 +223,13 @@ class Node:
         :param self:  The node whose level has to be decremented
         :param max_level:  Max value of level
         """
+        if self.level <= 1:
+            return
+        
+        if self.level == 2:
+            self.pattern_representation = "a" * self.paa_value
+            return
+
         values_group = list(self.group.values())
         temp_level = self.level - 1
         data = np.array(values_group[0])

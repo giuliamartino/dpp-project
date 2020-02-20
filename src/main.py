@@ -12,18 +12,17 @@ from dataset import Dataset
 # Global Variables
 max_level = 6 # Max admitted level of a node in tree structure (KAPRA Algorithm)
 
-def main(k_value=None, p_value=None, paa_value=None, dataset_path=None):
+def main(k_value=None, p_value=None, paa_value=None, file_name=None):
     """
     :param k_value:  Value of k attribute
     :param p_value:  Value of p attribute
-    :param dataset_path:  Path to the dataset to anonymize (.csv)
+    :param file_name:  Path to the dataset to anonymize (.csv)
     """
-
     # ----------------------------------------------------- Start Dataset Preparation
     logger.info("Preparing dataset")
-    if os.path.isfile(dataset_path):
+    if os.path.isfile(file_name):
         # Read the time series from a .csv file
-        time_series = pd.read_csv(dataset_path)
+        time_series = pd.read_csv("datasets\\" + file_name)
 
     # Get attributes names (columns)
     columns = list(time_series.columns)
@@ -42,6 +41,7 @@ def main(k_value=None, p_value=None, paa_value=None, dataset_path=None):
     # pylint: disable=W0612
     for index, row in time_series.iterrows():
         time_series_dict[row["CountryCode"]] = list(row["1960":"2015"])
+        # time_series_dict[row["Product_Code"]] = list(row["W0":"W51"])
 
     # ----------------------------------------------------- End Dataset Preparation
 
@@ -52,11 +52,18 @@ def main(k_value=None, p_value=None, paa_value=None, dataset_path=None):
     # ----------------------------------------------------- End KAPRA Algorithm
 
     # ----------------------------------------------------- Start K-anonymity
+    logger.info("Start of K-anonymity")
     ka.create_k_groups(dataset, k_value, p_value, columns)
+    logger.info("End of K-anonymity")
     # ----------------------------------------------------- End K-anonymity
 
-    
-            
+    # ----------------------------------------------------- Start generalization
+    dataset.generalize()
+    # ----------------------------------------------------- End generalization
+
+    # ----------------------------------------------------- Start generalization
+    dataset.save_on_file("outputs\\" + file_name)
+    # ----------------------------------------------------- End generalization
 
  
 
@@ -66,9 +73,9 @@ if __name__ == "__main__":
         k_value = int(sys.argv[1])
         p_value = int(sys.argv[2])
         paa_value = int(sys.argv[3])
-        dataset_path = sys.argv[4]
+        file_name = sys.argv[4]
         if k_value > p_value:
-            main(k_value=k_value, p_value=p_value, paa_value=paa_value, dataset_path=dataset_path)
+            main(k_value=k_value, p_value=p_value, paa_value=paa_value, file_name=file_name)
         else:
             print("[*] Usage: python kp-anonymity.py k_value p_value paa_value dataset.csv")
             print("[*] k_value should be greater than p_value")

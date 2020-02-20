@@ -279,7 +279,7 @@ def main(k_value=None, p_value=None, paa_value=None, dataset_path=None):
 
             dataset_anonymized.pattern_anonymized_data.append(good_leaf_nodes)
         dataset_anonymized.compute_anonymized_data()
-        dataset_anonymized.save_on_file("dado\\Dataset\\output.csv")
+        dataset_anonymized.save_on_file("esempi\\Dataset\\output.csv")
 
 
 if __name__ == "__main__":
