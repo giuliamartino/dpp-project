@@ -67,13 +67,13 @@ def find_tuple_with_maximum_ncp(fixed_tuple, time_series_tmp, key_fixed_tuple, m
 
 def get_list_min_and_max_from_table(table):
     """
-    From a table get a list of maximum and minimum value of each attribut
+    From a table get a list of maximum and minimum value of each attribute
     :param table:
     :return: list_of_minimum_value, list_of_maximum_value
     """
 
-    attributes_maximum_value = table[0]
-    attributes_minimum_value = table[0]
+    attributes_maximum_value = [0] * len(table[0])
+    attributes_minimum_value = [float('inf')] * len(table[0])
 
     for row in range(1, len(table)):
         for index_attribute in range(0, len(table[row])):

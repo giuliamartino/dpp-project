@@ -1,6 +1,7 @@
 import numpy as np
 from loguru import logger
 from node import Node
+import k_anonymity as ka
 
 class Dataset:
     def __init__(self, data: list = list(), p_data: list = list(), kp_data: list = list(), pr: dict = dict(),
@@ -93,12 +94,28 @@ class Dataset:
         self.p_data = good_leaf_nodes
 
     def generalize(self):
-        return "end"
+        for index in range(0, len(self.kp_data)):
+            logger.info("Generalizing group {}".format(index))
+            group = self.kp_data[index]
+            min_list, max_list = ka.get_list_min_and_max_from_table(list(group.values()))
+            for key in group:
+                row = list()
+                for column in range(0, len(group[key])):
+                    row.append("[{}-{}]".format(min_list[column], max_list[column]))
+                pr = self.pr[key]
+                row.append(pr)
+                row.append(index)
+                self.final_data[key] = row
+        return self.final_data
 
-    def save_on_file(self, file_name):
+    def save_on_file(self, file_name=None, first_column=None, columns=None):
+        separator = "\t"
+        columns.insert(0, first_column)
+        columns.append("Pattern")
+        columns.append("Group")      
         with open(file_name, "w") as file_to_write:
-            value_to_print_on_file = ""
+            columns_string = separator.join(map(str, columns)) 
+            file_to_write.write(columns_string+"\n")
             for key, value in self.final_data.items():
-                value_to_print_on_file = key
-                value_to_print_on_file = "{},{}".format(value_to_print_on_file, ",".join(value))
+                value_to_print_on_file = key + separator + separator.join(map(str, value))
                 file_to_write.write(value_to_print_on_file+"\n")

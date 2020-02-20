@@ -20,13 +20,15 @@ def main(k_value=None, p_value=None, paa_value=None, file_name=None):
     """
     # ----------------------------------------------------- Start Dataset Preparation
     logger.info("Preparing dataset")
-    if os.path.isfile(file_name):
+    if os.path.isfile("datasets\\" + file_name):
         # Read the time series from a .csv file
         time_series = pd.read_csv("datasets\\" + file_name)
+    else:
+        return
 
     # Get attributes names (columns)
     columns = list(time_series.columns)
-    columns.pop(0)  # Remove first column (Country Code)
+    first_column = columns.pop(0)  # Remove first column (Country Code)
     # Save all maximum/minimum values for each column
     attributes_maximum_value = list()
     attributes_minimum_value = list()
@@ -40,8 +42,13 @@ def main(k_value=None, p_value=None, paa_value=None, file_name=None):
     # The function iterrows returns both index of the row and content of the current row
     # pylint: disable=W0612
     for index, row in time_series.iterrows():
-        time_series_dict[row["CountryCode"]] = list(row["1960":"2015"])
-        # time_series_dict[row["Product_Code"]] = list(row["W0":"W51"])
+        if file_name == "Piccolo.csv" or file_name == "Sales_Transaction_Dataset_Weekly_Final.csv":
+            time_series_dict[row["Product_Code"]] = list(row["W0":"W51"])
+        elif file_name == "UrbanPopulation.csv":
+            time_series_dict[row["CountryCode"]] = list(row["1960":"2015"])
+        else:
+            logger.info("Unknown file")
+            return
 
     # ----------------------------------------------------- End Dataset Preparation
 
@@ -56,13 +63,17 @@ def main(k_value=None, p_value=None, paa_value=None, file_name=None):
     ka.create_k_groups(dataset, k_value, p_value, columns)
     logger.info("End of K-anonymity")
     # ----------------------------------------------------- End K-anonymity
-
+    
     # ----------------------------------------------------- Start generalization
+    logger.info("Start of generalization")
     dataset.generalize()
+    logger.info("End of generalization")
     # ----------------------------------------------------- End generalization
 
     # ----------------------------------------------------- Start generalization
-    dataset.save_on_file("outputs\\" + file_name)
+    logger.info("Printing on file..")
+    dataset.save_on_file("outputs\\" + file_name, first_column, columns)
+    logger.info("Output created in outputs folder")
     # ----------------------------------------------------- End generalization
 
  
