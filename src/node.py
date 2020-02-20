@@ -247,4 +247,3 @@ class Node:
         if equal:
             self.level = temp_level
             self.pattern_representation = pr
-

@@ -301,7 +301,3 @@ def create_k_groups(dataset: Dataset = None, k_value = None, p_value = None, col
         dataset.p_data.remove(node)
     
     return dataset
-
-
-        
-
