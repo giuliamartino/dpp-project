@@ -109,7 +109,7 @@ class Dataset:
         return self.final_data
 
     def save_on_file(self, file_name=None, first_column=None, columns=None):
-        separator = "\t"
+        separator = ","
         columns.insert(0, first_column)
         columns.append("Pattern")
         columns.append("Group")      

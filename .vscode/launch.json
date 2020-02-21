@@ -8,10 +8,7 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "args": [
-                "4",
-                "3",
-                "3",
-                "Sales_Transaction_Dataset_Weekly_Final.csv"]
+                "UrbanPopulation.csv"]
         }
     ]
 }

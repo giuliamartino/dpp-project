@@ -9,10 +9,7 @@ from node import Node
 from loguru import logger
 from dataset import Dataset
 
-# Global Variables
-max_level = 6 # Max admitted level of a node in tree structure (KAPRA Algorithm)
-
-def main(k_value=None, p_value=None, paa_value=None, file_name=None):
+def main(k_value=None, p_value=None, paa_value=None, max_level=None, file_name=None):
     """
     :param k_value:  Value of k attribute
     :param p_value:  Value of p attribute
@@ -42,7 +39,7 @@ def main(k_value=None, p_value=None, paa_value=None, file_name=None):
     # The function iterrows returns both index of the row and content of the current row
     # pylint: disable=W0612
     for index, row in time_series.iterrows():
-        if file_name == "Piccolo.csv" or file_name == "Sales_Transaction_Dataset_Weekly_Final.csv":
+        if file_name == "Products.csv":
             time_series_dict[row["Product_Code"]] = list(row["W0":"W51"])
         elif file_name == "UrbanPopulation.csv":
             time_series_dict[row["CountryCode"]] = list(row["1960":"2015"])
@@ -72,7 +69,9 @@ def main(k_value=None, p_value=None, paa_value=None, file_name=None):
 
     # ----------------------------------------------------- Start printing
     logger.info("Printing on file..")
-    dataset.save_on_file("outputs\\" + file_name, first_column, columns)
+    output_file_name = "outputs\\" + file_name.replace(".csv", "") + "_" + str(k_value) + "_" + str(p_value) \
+                            + "_" + str(paa_value) + "_" + str(max_level) + ".csv"
+    dataset.save_on_file(output_file_name, first_column, columns)
     logger.info("Output created in outputs folder")
     # ----------------------------------------------------- End printing
 
@@ -82,12 +81,16 @@ if __name__ == "__main__":
         k_value = int(sys.argv[1])
         p_value = int(sys.argv[2])
         paa_value = int(sys.argv[3])
-        file_name = sys.argv[4]
-        if k_value > p_value:
-            main(k_value=k_value, p_value=p_value, paa_value=paa_value, file_name=file_name)
+        max_level = int(sys.argv[4])
+        file_name = sys.argv[5]
+        if max_level > 19 or max_level < 3:
+            print("[*] Usage: python kp-anonymity.py k_value p_value paa_value max_level dataset.csv")
+            print("[*] max_level must be greater than 2 and lower than 20")
+        if k_value <= p_value:
+            main(k_value=k_value, p_value=p_value, paa_value=paa_value, max_level=max_level, file_name=file_name)
         else:
-            print("[*] Usage: python kp-anonymity.py k_value p_value paa_value dataset.csv")
-            print("[*] k_value should be greater than p_value")
+            print("[*] Usage: python main.py k_value p_value paa_value max_level dataset.csv")
+            print("[*] p_value should be greater than k_value")
     else:
-        print("[*] Usage: python kp-anonymity.py k_value p_value paa_value dataset.csv")
+        print("[*] Usage: python main.py k_value p_value paa_value max_level dataset.csv")
         
