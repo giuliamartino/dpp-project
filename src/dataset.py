@@ -5,12 +5,15 @@ import k_anonymity as ka
 
 class Dataset:
     def __init__(self, data: list = None, p_data: list = None, kp_data: list = None, pr: dict = None,
-                 final_data: dict = None):
+                 final_data: dict = None, ncp: int = None, y_matrix: list = None, z_matrix: list = None):
         self.data = list()
         self.p_data = list()
         self.kp_data = list()
         self.pr = dict()
         self.final_data = dict()
+        self.ncp = 0
+        self.y_matrix = list()
+        self.z_matrix = list()
 
     def compute_anonymized_data(self):
         """
@@ -100,13 +103,18 @@ class Dataset:
             min_list, max_list = ka.get_list_min_and_max_from_table(list(group.values()))
             for key in group:
                 row = list()
+                y_list = list()
+                z_list = list()
                 for column in range(0, len(group[key])):
                     row.append("[{}-{}]".format(min_list[column], max_list[column]))
+                    y_list.append(min_list[column])
+                    z_list.append(max_list[column])
+                self.y_matrix.append(y_list)
+                self.z_matrix.append(z_list)
                 pr = self.pr[key]
                 row.append(pr)
                 row.append(index)
                 self.final_data[key] = row
-        return self.final_data
 
     def save_on_file(self, file_name=None, first_column=None, columns=None):
         separator = ","
@@ -119,3 +127,15 @@ class Dataset:
             for key, value in self.final_data.items():
                 value_to_print_on_file = key + separator + separator.join(map(str, value))
                 file_to_write.write(value_to_print_on_file+"\n")
+
+    def compute_mean_ncp(self):
+        y = np.array(self.y_matrix)
+        z = np.array(self.z_matrix)
+        col_min = np.amin(y, axis=0)
+        col_max = np.amax(z, axis=0)
+        ncp = 0
+        for row in range(0,len(y)):
+            for column in range(0, len(y[row])):
+                step = (z[row][column] - y[row][column]) / (col_max[column] - col_min[column])
+                ncp += step
+        return ncp / len(y[0])

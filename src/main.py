@@ -75,6 +75,8 @@ def main(k_value=None, p_value=None, paa_value=None, max_level=None, file_name=N
     dataset.save_on_file(output_file_name, first_column, columns)
     #logger.info("Output created in outputs folder")
     # ----------------------------------------------------- End printing
+    
+    return dataset.compute_mean_ncp()
 
 if __name__ == "__main__":
 
