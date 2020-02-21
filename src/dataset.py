@@ -17,9 +17,9 @@ class Dataset:
         create dataset ready to be anonymized
         :return:
         """
-        logger.info("Start creation dataset anonymized")
+        #logger.info("Start creation dataset anonymized")
         for index in range(0, len(self.data)):
-            logger.info("Start creation Group {}".format(index))
+            #logger.info("Start creation Group {}".format(index))
 
             group = self.data[index]
             list_good_leaf_node = self.p_data[index]
@@ -36,9 +36,9 @@ class Dataset:
                         value_row.append(node.pattern_representation)
                 value_row.append("Group: {}".format(index))
                 self.final_data[key] = value_row
-                logger.info(key)
-                logger.info(value_row)
-            logger.info("Finish creation Group {}".format(index))
+                #logger.info(key)
+                #logger.info(value_row)
+            #logger.info("Finish creation Group {}".format(index))
 
     def recycle_bad_leaves(self, good_leaf_nodes=None, bad_leaf_nodes=None, p_value=None, paa_value=None):
         max_bad_level = 0
@@ -95,7 +95,7 @@ class Dataset:
 
     def generalize(self):
         for index in range(0, len(self.kp_data)):
-            logger.info("Generalizing group {}".format(index))
+            #logger.info("Generalizing group {}".format(index))
             group = self.kp_data[index]
             min_list, max_list = ka.get_list_min_and_max_from_table(list(group.values()))
             for key in group:
