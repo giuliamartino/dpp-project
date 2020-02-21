@@ -68,7 +68,7 @@ def get_list_min_and_max_from_table(table):
     attributes_maximum_value = [0] * len(table[0])
     attributes_minimum_value = [float('inf')] * len(table[0])
 
-    for row in range(1, len(table)):
+    for row in range(0, len(table)):
         for index_attribute in range(0, len(table[row])):
             if table[row][index_attribute] > attributes_maximum_value[index_attribute]:
                 attributes_maximum_value[index_attribute] = table[row][index_attribute]
@@ -226,7 +226,7 @@ def create_k_groups(dataset: Dataset = None, k_value = None, p_value = None, col
                 transpose[i] = list(transpose[i])
                 attributes_maximum_value.append(max(transpose[i]))
                 attributes_minimum_value.append(min(transpose[i]))
-            k_anonymity_top_down_approach(time_series=node.group, k_value=k_value, columns_list=columns,
+            k_anonymity_top_down_approach(time_series=node.group, k_value=p_value, columns_list=columns,
                                             maximum_value=attributes_maximum_value, minimum_value=attributes_minimum_value,
                                             time_series_k_anonymized=split_group)
             dataset.p_data.remove(node)

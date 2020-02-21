@@ -8,12 +8,16 @@ def main(file_name=None):
         m.logger.info("Wrong path")
         return
 
-    for k_value in range(2,8):
-        for p_value in range(k_value+1, k_value+2):
-            for paa_value in range(3,6):
-                for max_level in range(5,11):
+    for p_value in range(2,8):
+        for k_value in range(p_value+1,p_value+7):
+            for paa_value in range(3,4):
+                for max_level in range(5,6):
                     m.main(k_value, p_value, paa_value, max_level, file_name)
-       
+                    m.logger.info("End: " + str(k_value) + "," + str(p_value) + "," + str(paa_value) + "," + str(max_level))
+
+    # m.main(2, 3, 3, 5, file_name)
+
+
 if __name__ == "__main__":
 
     if len(m.sys.argv) == 2:

@@ -91,7 +91,7 @@ if __name__ == "__main__":
             main(k_value=k_value, p_value=p_value, paa_value=paa_value, max_level=max_level, file_name=file_name)
         else:
             print("[*] Usage: python main.py k_value p_value paa_value max_level dataset.csv")
-            print("[*] p_value should be greater than k_value")
+            print("[*] k_value must be greater than p_value")
     else:
         print("[*] Usage: python main.py k_value p_value paa_value max_level dataset.csv")
         

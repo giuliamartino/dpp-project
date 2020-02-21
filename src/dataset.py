@@ -4,13 +4,13 @@ from node import Node
 import k_anonymity as ka
 
 class Dataset:
-    def __init__(self, data: list = list(), p_data: list = list(), kp_data: list = list(), pr: dict = dict(),
-                 final_data: dict = dict()):
-        self.data = data
-        self.p_data = p_data
-        self.kp_data = kp_data
-        self.pr = pr
-        self.final_data = final_data
+    def __init__(self, data: list = None, p_data: list = None, kp_data: list = None, pr: dict = None,
+                 final_data: dict = None):
+        self.data = list()
+        self.p_data = list()
+        self.kp_data = list()
+        self.pr = dict()
+        self.final_data = dict()
 
     def compute_anonymized_data(self):
         """
