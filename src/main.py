@@ -72,7 +72,7 @@ def main(k_value=None, p_value=None, paa_value=None, max_level=None, file_name=N
     #logger.info("Printing on file..")
     output_file_name = "outputs\\" + file_name.replace(".csv", "") + "_" + str(k_value) + "_" + str(p_value) \
                             + "_" + str(paa_value) + "_" + str(max_level) + ".csv"
-    dataset.save_on_file(output_file_name, first_column, columns)
+    #dataset.save_on_file(output_file_name, first_column, columns)
     #logger.info("Output created in outputs folder")
     # ----------------------------------------------------- End printing
     
