@@ -35,21 +35,21 @@ class Node:
         :param paa_value
         :return:
         """
-        # #logger.info("good_leaf_nodes: {}, bad_leaf_nodes: {}".format(len(good_leaf_nodes), len(bad_leaf_nodes)))
+        # logger.info("good_leaf_nodes: {}, bad_leaf_nodes: {}".format(len(good_leaf_nodes), len(bad_leaf_nodes)))
         if self.size < p_value:
-            #logger.info("size:{}, p_value:{} == bad-leaf".format(self.size, p_value))
+            logger.info("size:{}, p_value:{} == bad-leaf".format(self.size, p_value))
             self.label = "bad-leaf"
             bad_leaf_nodes.append(self)
             return
 
         if self.level == max_level:
-            #logger.info("size:{}, p_value:{} == good-leaf".format(self.size, p_value))
+            logger.info("size:{}, p_value:{} == good-leaf".format(self.size, p_value))
             self.label = "good-leaf"
             good_leaf_nodes.append(self)
             return
 
         if p_value <= self.size < 2*p_value:
-            #logger.info("Maximize-level, size:{}, p_value:{} == good-leaf".format(self.size, p_value))
+            logger.info("Maximize-level, size:{}, p_value:{} == good-leaf".format(self.size, p_value))
             self.maximize_node_level(max_level)
             self.label = "good-leaf"
             good_leaf_nodes.append(self)
@@ -79,24 +79,32 @@ class Node:
                 tentative_child_node[pr].append(key)
             else:
                 tentative_child_node[pr] = [key]
-        length_all_tentative_child = [len(x) for x in list(tentative_child_node.values())]
-        good_leaf = np.all(np.array(length_all_tentative_child) < p_value)
-
+        
+        
+        
+        
+        length_all_tentative_child = list()
+        good_leaf = True
+        for key in sorted(tentative_child_node.keys()):
+            l = len(tentative_child_node[key])
+            length_all_tentative_child.append(l)
+            if l >= p_value:
+                good_leaf = False
+        
         if good_leaf:
-            #logger.info("Good-leaf, all_tentative_child are < {}".format(p_value))
+            logger.info("Good-leaf, all_tentative_child are < {}".format(p_value))
             self.label = "good-leaf"
             good_leaf_nodes.append(self)
             return
         else:
-            #logger.info("N can be split")
-            #logger.info("Compute tentative good nodes and tentative bad nodes")
+            logger.info("N can be split")
+            logger.info("Compute tentative good nodes and tentative bad nodes")
+            
             # tentative good nodes
-            # index of nodes in tentative_child_node with more p_value
-            pr_keys = list(tentative_child_node.keys())
-            # get index tentative good node
+            pr_keys = list(sorted(tentative_child_node.keys()))
             pattern_representation_tg = list()
             tg_nodes_index = list(np.where(np.array(length_all_tentative_child) >= p_value)[0])
-            # #logger.info(pr_keys)
+            # logger.info(pr_keys)
             tg_nodes = list()
             for index in tg_nodes_index:
                 keys_elements = tentative_child_node[pr_keys[index]]
@@ -124,7 +132,7 @@ class Node:
                 total_size_tb_nodes += len(tb_node)
 
             if total_size_tb_nodes >= p_value:
-                #logger.info("Merge all bad nodes in a single node, and label it as good-leaf")
+                logger.info("Merge all bad nodes in a single node, and label it as good-leaf")
                 child_merge_node_group = dict()
                 for tb_node in tb_nodes:
                     for key, value in tb_node.items():
@@ -136,7 +144,7 @@ class Node:
 
             # Not merged bad nodes
             else: 
-                #logger.info("Label all tb_node {0} as bad-leaf".format(len(tb_nodes)))
+                logger.info("Label all tb_node {0} as bad-leaf".format(len(tb_nodes)))
                 # Append bad nodes to global list
                 for index in range(0, len(tb_nodes)):
                     node = Node(level=(self.level + 1), pattern_representation=pattern_representation_tb[index], 
@@ -144,7 +152,7 @@ class Node:
                     self.child_node.append(node)
                     bad_leaf_nodes.append(node)
                 
-            #logger.info("Split only tg_nodes {0}".format(len(tg_nodes)))                
+            logger.info("Split only tg_nodes {0}".format(len(tg_nodes)))                
             for index in range(0, len(tg_nodes)):
                 node = Node(level=(self.level + 1), pattern_representation=pattern_representation_tg[index],
                             label="intermediate", group=tg_nodes[index], parent=self, paa_value=self.paa_value)
@@ -209,16 +217,15 @@ class Node:
                 self.level = temp_level
         # pylint: disable=W0612
         if original_level != self.level:
-            #logger.info("New level for node: {}".format(self.level))
+            logger.info("New level for node: {}".format(self.level))
             data = np.array(values_group[0])
             data_znorm = znorm(data)
             data_paa = paa(data_znorm, self.paa_value)
             self.pattern_representation = ts_to_string(data_paa, cuts_for_asize(self.level))
         else:
-            var_a_caso = 0
-            #logger.info("Can't increase more, max possible level already reached")
+            logger.info("Can't increase more, max possible level already reached")
 
-    def decrease_node_level(self):
+    def decrease_node_level(self, to_level=None):
         """
         Decrease the level of the node
         :param self:  The node whose level has to be decremented
@@ -229,10 +236,15 @@ class Node:
         
         if self.level == 2:
             self.pattern_representation = "a" * self.paa_value
+            self.level = 1
             return
 
         values_group = list(self.group.values())
-        temp_level = self.level - 1
+        if to_level == None:
+            temp_level = self.level - 1
+        else:
+            temp_level = to_level
+
         data = np.array(values_group[0])
         data_znorm = znorm(data)
         data_paa = paa(data_znorm, self.paa_value)

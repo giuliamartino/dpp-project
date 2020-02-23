@@ -14,10 +14,9 @@ def main(k_value=None, p_value=None, paa_value=None, max_level=None, file_name=N
     :param k_value:  Value of k attribute
     :param p_value:  Value of p attribute
     :param file_name:  Path to the dataset to anonymize (.csv)
-    """
-    logger.disable("logger")
+    """    
     # ----------------------------------------------------- Start Dataset Preparation
-    #logger.info("Preparing dataset")
+    logger.info("Preparing dataset")
     if os.path.isfile("datasets\\" + file_name):
         # Read the time series from a .csv file
         time_series = pd.read_csv("datasets\\" + file_name)
@@ -45,35 +44,35 @@ def main(k_value=None, p_value=None, paa_value=None, max_level=None, file_name=N
         elif file_name == "UrbanPopulation.csv":
             time_series_dict[row["CountryCode"]] = list(row["1960":"2015"])
         else:
-            #logger.info("Unknown file")
+            logger.info("Unknown file")
             return
 
     # ----------------------------------------------------- End Dataset Preparation
 
     # ----------------------------------------------------- Start KAPRA Algorithm
-    #logger.info("Start of KAPRA Algorithm")
+    logger.info("Start of KAPRA Algorithm")
     dataset = pa.KAPRA(time_series_dict, p_value, paa_value, max_level)
-    #logger.info("End of KAPRA Algorithm")
+    logger.info("End of KAPRA Algorithm")
     # ----------------------------------------------------- End KAPRA Algorithm
 
     # ----------------------------------------------------- Start K-anonymity
-    #logger.info("Start of K-anonymity")
+    logger.info("Start of K-anonymity")
     ka.create_k_groups(dataset, k_value, p_value, columns)
-    #logger.info("End of K-anonymity")
+    logger.info("End of K-anonymity")
     # ----------------------------------------------------- End K-anonymity
     
     # ----------------------------------------------------- Start generalization
-    #logger.info("Start of generalization")
+    logger.info("Start of generalization")
     dataset.generalize()
-    #logger.info("End of generalization")
+    logger.info("End of generalization")
     # ----------------------------------------------------- End generalization
 
     # ----------------------------------------------------- Start printing
-    #logger.info("Printing on file..")
+    logger.info("Printing on file..")
     output_file_name = "outputs\\" + file_name.replace(".csv", "") + "_" + str(k_value) + "_" + str(p_value) \
                             + "_" + str(paa_value) + "_" + str(max_level) + ".csv"
-    #dataset.save_on_file(output_file_name, first_column, columns)
-    #logger.info("Output created in outputs folder")
+    dataset.save_on_file(output_file_name, first_column, columns)
+    logger.info("Output created in outputs folder")
     # ----------------------------------------------------- End printing
     
     return dataset.compute_mean_ncp()

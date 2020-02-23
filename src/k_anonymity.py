@@ -86,19 +86,19 @@ def k_anonymity_top_down_approach(time_series=None, k_value=None, columns_list=N
     :param k_value:  Value of k attribute
     """
     if len(time_series) < 2*k_value:
-        #logger.info("End Recursion")
+        logger.info("End Recursion")
         time_series_k_anonymized.append(time_series)
         return
     else:
         # Partition time_series into two exclusive subsets group_u and group_v
         # such that group_u and group_v are more local than time_series,
         # and either group_u or group_v have at least k tuples
-        #logger.info("Start partition with size {}".format(len(time_series)))
+        logger.info("Start partition with size {}".format(len(time_series)))
         keys = list(time_series.keys())
         
         # Pick random tuple
         random_tuple = keys[random.randint(0, len(keys) - 1)]
-        #logger.info("Get random tuple (u1) {}".format(random_tuple))
+        logger.info("Get random tuple (u1) {}".format(random_tuple))
 
         # Search for the couple of tuples (u,v) which maximizes NCP(u,v)
         rounds = 6
@@ -166,7 +166,7 @@ def k_anonymity_top_down_approach(time_series=None, k_value=None, columns_list=N
                 bad_group[min_ncp_index] = good_group[min_ncp_index]
                 del good_group[min_ncp_index]
 
-        #logger.info("Group u: {}, Group v: {}".format(len(group_u), len(group_v)))
+        logger.info("Group u: {}, Group v: {}".format(len(group_u), len(group_v)))
         if len(group_u) > k_value:
             # Recursive partition of group_u
             k_anonymity_top_down_approach(time_series=group_u, k_value=k_value, columns_list=columns_list,
@@ -254,9 +254,12 @@ def create_k_groups(dataset: Dataset = None, k_value = None, p_value = None, col
         for node in dataset.p_data:
             tuples_list = list(node.group.values())
             current_inst_value_loss = compute_instant_value_loss(tuples_list)
-            if current_inst_value_loss[1] < min_inst_value_loss:
-                min_inst_value_loss = current_inst_value_loss[1]
-                min_node = node
+            if current_inst_value_loss[1] <= min_inst_value_loss:
+                if current_inst_value_loss[1] < min_inst_value_loss:
+                    min_inst_value_loss = current_inst_value_loss[1]
+                    min_node_list = list()
+                min_node_list.append(node)
+        min_node = min_node_list[randint(0, (len(min_node_list) - 1))]
         new_group = min_node.group
         dataset.p_data.remove(min_node)
         tot_size -= len(min_node.group)
@@ -269,9 +272,12 @@ def create_k_groups(dataset: Dataset = None, k_value = None, p_value = None, col
                 tmp_group = list(node.group.values())
                 current_group = current_group + tmp_group
                 current_inst_value_loss = compute_instant_value_loss(current_group)
-                if current_inst_value_loss[1] < min_inst_value_loss:
-                    min_inst_value_loss = current_inst_value_loss[1]
-                    min_node = node
+                if current_inst_value_loss[1] <= min_inst_value_loss:
+                    if current_inst_value_loss[1] < min_inst_value_loss:
+                        min_inst_value_loss = current_inst_value_loss[1]
+                        min_node_list = list()
+                    min_node_list.append(node)
+            min_node = min_node_list[randint(0, (len(min_node_list) - 1))]
             new_group.update(min_node.group)
             dataset.p_data.remove(min_node)
             tot_size -= len(min_node.group)
