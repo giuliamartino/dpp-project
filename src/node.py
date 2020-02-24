@@ -242,6 +242,10 @@ class Node:
         values_group = list(self.group.values())
         if to_level == None:
             temp_level = self.level - 1
+        elif to_level == 1:
+            self.pattern_representation = "a" * self.paa_value
+            self.level = 1
+            return
         else:
             temp_level = to_level
 

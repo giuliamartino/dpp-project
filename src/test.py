@@ -13,15 +13,14 @@ def multiple_tests(file_name=None):
     final_table=list()
     final_table.append(["k_value","p_value","paa_value","max_level","ncp"])
 
-    m.logger.disable("__main__")
     m.logger.disable("main")
     m.logger.disable("p_anonymity")
     m.logger.disable("k_anonymity")
     m.logger.disable("node")
     m.logger.disable("dataset")
 
-    for p_value in range(2,8):
-        for k_value in range(p_value+1,p_value+7):
+    for k_value in range(3,12):
+        for p_value in range(k_value-1,1,-1):
             for paa_value in range(3,6):
                 for max_level in range(5,11):
                     ncp = m.main(k_value, p_value, paa_value, max_level, file_name)
@@ -29,9 +28,9 @@ def multiple_tests(file_name=None):
                                     + str(paa_value) + "," + str(max_level))
                     final_table.append([k_value,p_value,paa_value,max_level,ncp])
     
-    # ncp = m.main(4, 3, 4, 7, file_name)
+    # ncp = m.main(8, 7, 3, 5, file_name)
     # final_table.append([4,3,4,7,ncp])
-    # ncp = m.main(5, 3, 3, 5, file_name)
+    # ncp = m.main(8, 7, 3, 6, file_name)
     # final_table.append([5,3,3,5,ncp])
     
     save_ncp_table(file_name=file_name, ncp_table=final_table)
