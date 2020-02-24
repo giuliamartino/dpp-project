@@ -71,8 +71,14 @@ def plot_3d(best_rows=None):
 
     fig = plt.figure()
     ax = Axes3D(fig)
-    surf = ax.plot_trisurf(x, y, z, cmap=cm.jet, linewidth=0.1) # pylint: disable=no-member
-    fig.colorbar(surf, shrink=0.5, aspect=5)
+
+    #plot surface
+    #surf = ax.plot_trisurf(x, y, z,cmap=cm.CMRmap, linewidth=0.1) # pylint: disable=no-member cm.jet cm.Spectral cm.CMRmap
+    #fig.colorbar(surf, shrink=0.5, aspect=5) 
+
+    #plot only points
+    ax.scatter(x, y, z)
+    
     ax.set_xlabel('k_value')
     ax.set_ylabel('p_value')
     ax.set_zlabel('ncp')
