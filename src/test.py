@@ -1,6 +1,10 @@
 import os
 import main as m
+from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
+from matplotlib import cm
+import numpy as np
+from sys import argv
 
 def multiple_tests(file_name=None):
     if file_name == None:
@@ -44,9 +48,31 @@ def save_ncp_table(file_name=None, ncp_table=None):
 
 def plot_tests(file_name=None):
     ncp_table = read_ncp_table(file_name)
-    max_level, paa_value = get_best_values(ncp_table)
+    paa_value, max_level = get_best_values(ncp_table)
 
-    # TODO make plots
+    best_rows = list()
+    for i in range(len(ncp_table)):
+        if ncp_table.values[i][2] == paa_value and ncp_table.values[i][3] == max_level:
+            best_rows.append(ncp_table.values[i])
+    
+    plot_3d(best_rows)
+
+def plot_3d(best_rows=None):
+    trasp_array=list(map(list, zip(*best_rows)))
+    x=trasp_array[0]
+    y=trasp_array[1]
+    z=trasp_array[4]
+
+    fig = plt.figure()
+    ax = Axes3D(fig)
+    surf = ax.plot_trisurf(x, y, z, cmap=cm.jet, linewidth=0.1) # pylint: disable=no-member
+    fig.colorbar(surf, shrink=0.5, aspect=5)
+    ax.set_xlabel('k_value')
+    ax.set_ylabel('p_value')
+    ax.set_zlabel('ncp')
+    # Save the file
+    # plt.savefig('test.pdf')
+    plt.show()
 
 def read_ncp_table(file_name=None):
     if os.path.isfile("final_table\\" + file_name.replace(".csv", "") + "_out.csv"):
@@ -82,4 +108,3 @@ if __name__ == "__main__":
         plot_tests(file_name=file_name)
     else:
         print("[*] Usage: python test.py dataset.csv")
-
