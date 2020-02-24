@@ -127,7 +127,7 @@ class Dataset:
             columns_string = separator.join(map(str, columns)) 
             file_to_write.write(columns_string+"\n")
             for key, value in self.final_data.items():
-                value_to_print_on_file = key + separator + separator.join(map(str, value))
+                value_to_print_on_file = str(key) + separator + separator.join(map(str, value))
                 file_to_write.write(value_to_print_on_file+"\n")
 
     def compute_mean_ncp(self):

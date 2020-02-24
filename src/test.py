@@ -23,6 +23,12 @@ def multiple_tests(file_name=None):
     m.logger.disable("node")
     m.logger.disable("dataset")
 
+    #               UrbanPopulation             Products                    ExoTest
+    # k_value:      range(3,12)                 range(3,12)                 range(5,12)
+    # p_value:      range(k_value-1,1,-1)       range(k_value-1,1,-1)       range(k_value-1,1,-1)
+    # paa_value:    range(3,6)                  range(3,6)                  range(3,6)
+    # max_level:    range(5,11)                 range(5,11)                 range(5,11)
+
     for k_value in range(3,12):
         for p_value in range(k_value-1,1,-1):
             for paa_value in range(3,6):
@@ -33,9 +39,9 @@ def multiple_tests(file_name=None):
                     final_table.append([k_value,p_value,paa_value,max_level,ncp])
     
     # ncp = m.main(8, 7, 3, 5, file_name)
-    # final_table.append([4,3,4,7,ncp])
+    # final_table.append([8,7,3,5,ncp])
     # ncp = m.main(8, 7, 3, 6, file_name)
-    # final_table.append([5,3,3,5,ncp])
+    # final_table.append([8,7,3,6,ncp])
     
     save_ncp_table(file_name=file_name, ncp_table=final_table)
 
@@ -105,6 +111,6 @@ if __name__ == "__main__":
 
     if len(m.sys.argv) == 2:
         file_name = m.sys.argv[1]
-        plot_tests(file_name=file_name)
+        multiple_tests(file_name=file_name)
     else:
         print("[*] Usage: python test.py dataset.csv")

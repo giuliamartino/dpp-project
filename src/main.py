@@ -23,9 +23,14 @@ def main(k_value=None, p_value=None, paa_value=None, max_level=None, file_name=N
     else:
         return
 
+    if file_name == "ExoTest.csv":
+        time_series = time_series.abs()
+
     # Get attributes names (columns)
     columns = list(time_series.columns)
-    first_column = columns.pop(0)  # Remove first column (Country Code)
+    first_column = columns.pop(0)  # Remove first column
+    if file_name == "ExoTest.csv":
+        columns = columns[499:549]
     # Save all maximum/minimum values for each column
     attributes_maximum_value = list()
     attributes_minimum_value = list()
@@ -43,6 +48,8 @@ def main(k_value=None, p_value=None, paa_value=None, max_level=None, file_name=N
             time_series_dict[row["Product_Code"]] = list(row["W0":"W51"])
         elif file_name == "UrbanPopulation.csv":
             time_series_dict[row["CountryCode"]] = list(row["1960":"2015"])
+        elif file_name == "ExoTest.csv":
+            time_series_dict[row["ROW"]] = list(row["FLUX.500":"FLUX.549"])
         else:
             logger.info("Unknown file")
             return
@@ -95,4 +102,4 @@ if __name__ == "__main__":
             print("[*] k_value must be greater than p_value")
     else:
         print("[*] Usage: python main.py k_value p_value paa_value max_level dataset.csv")
-        
+    
