@@ -118,6 +118,6 @@ if __name__ == "__main__":
 
     if len(m.sys.argv) == 2:
         file_name = m.sys.argv[1]
-        plot_tests(file_name=file_name)
+        multiple_tests(file_name=file_name)
     else:
         print("[*] Usage: python test.py dataset.csv")

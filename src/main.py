@@ -22,15 +22,10 @@ def main(k_value=None, p_value=None, paa_value=None, max_level=None, file_name=N
         time_series = pd.read_csv("datasets\\" + file_name)
     else:
         return
-
-    if file_name == "ExoTest.csv":
-        time_series = time_series.abs()
-
+   
     # Get attributes names (columns)
     columns = list(time_series.columns)
     first_column = columns.pop(0)  # Remove first column
-    if file_name == "ExoTest.csv":
-        columns = columns[499:549]
     # Save all maximum/minimum values for each column
     attributes_maximum_value = list()
     attributes_minimum_value = list()
