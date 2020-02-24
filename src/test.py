@@ -72,11 +72,12 @@ def plot_3d(best_rows=None):
     fig = plt.figure()
     ax = Axes3D(fig)
 
-    #plot surface
-    #surf = ax.plot_trisurf(x, y, z,cmap=cm.CMRmap, linewidth=0.1) # pylint: disable=no-member cm.jet cm.Spectral cm.CMRmap
-    #fig.colorbar(surf, shrink=0.5, aspect=5) 
+    # Plot surface
+    # pylint: disable=no-member
+    # surf = ax.plot_trisurf(x, y, z,cmap=cm.CMRmap, linewidth=0.1)
+    # fig.colorbar(surf, shrink=0.5, aspect=5)
 
-    #plot only points
+    # Plot only points
     ax.scatter(x, y, z)
     
     ax.set_xlabel('k_value')
@@ -117,6 +118,6 @@ if __name__ == "__main__":
 
     if len(m.sys.argv) == 2:
         file_name = m.sys.argv[1]
-        multiple_tests(file_name=file_name)
+        plot_tests(file_name=file_name)
     else:
         print("[*] Usage: python test.py dataset.csv")
