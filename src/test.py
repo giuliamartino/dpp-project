@@ -1,6 +1,6 @@
+import os
 import main as m
-from os import listdir
-from os.path import isfile, join
+import matplotlib.pyplot as plt
 
 def multiple_tests(file_name=None):
     if file_name == None:
@@ -42,10 +42,29 @@ def save_ncp_table(file_name=None, ncp_table=None):
             string = separator.join(map(str, row)) 
             f.write(string + "\n")
 
+def plot_tests(file_name=None):
+    ncp_table = read_ncp_table(file_name)
+
+    # TODO get best max_level and best paa_value
+    max_level, paa_value = get_best_values(ncp_table)
+
+    # TODO make plots
+
+def read_ncp_table(file_name=None):
+    if os.path.isfile("final_table\\" + file_name.replace(".csv", "") + "_out.csv"):
+        return m.pd.read_csv("datasets\\" + file_name)
+    else:
+        return
+
+def get_best_values(ncp_table=None):
+    # TODO
+    return 6, 4
+
 if __name__ == "__main__":
 
     if len(m.sys.argv) == 2:
         file_name = m.sys.argv[1]
-        multiple_tests(file_name=file_name)
+        plot_tests(file_name=file_name)
     else:
         print("[*] Usage: python test.py dataset.csv")
+
