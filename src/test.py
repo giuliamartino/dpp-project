@@ -44,21 +44,36 @@ def save_ncp_table(file_name=None, ncp_table=None):
 
 def plot_tests(file_name=None):
     ncp_table = read_ncp_table(file_name)
-
-    # TODO get best max_level and best paa_value
     max_level, paa_value = get_best_values(ncp_table)
 
     # TODO make plots
 
 def read_ncp_table(file_name=None):
     if os.path.isfile("final_table\\" + file_name.replace(".csv", "") + "_out.csv"):
-        return m.pd.read_csv("datasets\\" + file_name)
+        return m.pd.read_csv("final_table\\" + file_name.replace(".csv", "") + "_out.csv")
     else:
         return
 
 def get_best_values(ncp_table=None):
-    # TODO
-    return 6, 4
+    ordered_table = ncp_table.sort_values('ncp')
+    n_rows = round(len(ordered_table.index) * 0.15)
+    counting_rows = ordered_table.head(n_rows)
+    occurrences = dict()
+    max_couple = (0, 0)
+    max_occurrence = 0
+    # pylint: disable=W0612
+    for index, row in counting_rows.iterrows():
+        paa_value = row['paa_value']
+        max_level = row['max_level']
+        key = (paa_value, max_level)
+        if key not in occurrences:
+            occurrences[key] = 0
+        occurrences[key] += 1
+        if occurrences[key] > max_occurrence:
+            max_occurrence = occurrences[key]
+            max_couple = key
+            
+    return max_couple[0], max_couple[1]
 
 if __name__ == "__main__":
 
