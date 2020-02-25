@@ -56,3 +56,6 @@ docs/_build/
 # PyBuilder
 target/
 .vscode/launch.json
+*.csv
+*.json
+.vscode/launch.json

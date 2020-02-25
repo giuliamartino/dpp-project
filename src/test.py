@@ -77,6 +77,8 @@ def plot_3d(best_rows=None):
     # pylint: disable=no-member
     # surf = ax.plot_trisurf(x, y, z,cmap=cm.jet, linewidth=0.1)
     # fig.colorbar(surf, shrink=0.5, aspect=5)
+    surf = ax.plot_trisurf(x, y, z,cmap=cm.jet, linewidth=0.1)
+    fig.colorbar(surf, shrink=0.5, aspect=5)
 
     # Plot only points
     ax.scatter(x, y, z)
@@ -118,21 +120,24 @@ def get_best_values(ncp_table=None):
 if __name__ == "__main__":
 
     if len(m.sys.argv) == 2:
+    if len(m.sys.argv) == 3:
         file_name = m.sys.argv[1]
         
         # Testing
-        # multiple_tests(file_name=file_name)
+        if m.sys.argv[2]=="multitest":
+            multiple_tests(file_name=file_name)
         
         # Plotting
-        if file_name == "UrbanPopulation.csv":
-            n_columns = 56
-        elif file_name == "Products.csv":
-            n_columns = 52
-        elif file_name == "ExoTest.csv":
-            n_columns = 50
-        else:
-            m.logger.info("Wrong file")
-        plot_tests(file_name=file_name, n_columns=n_columns)
+        if m.sys.argv[2]=="plot":
+            if file_name == "UrbanPopulation.csv":
+                n_columns = 56
+            elif file_name == "Products.csv":
+                n_columns = 52
+            elif file_name == "ExoTest.csv":
+                n_columns = 50
+            else:
+                m.logger.info("Wrong file")
+            plot_tests(file_name=file_name, n_columns=n_columns)
 
     else:
-        print("[*] Usage: python test.py dataset.csv")
+        print("[*] Usage: python test.py dataset.csv plot / multitest")
