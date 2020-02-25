@@ -119,7 +119,6 @@ def get_best_values(ncp_table=None):
 
 if __name__ == "__main__":
 
-    if len(m.sys.argv) == 2:
     if len(m.sys.argv) == 3:
         file_name = m.sys.argv[1]
         
