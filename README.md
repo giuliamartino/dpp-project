@@ -23,7 +23,7 @@ Our example datasets: <br />
 - Multiple test<br />
 	Run the [test.py](src/test.py "test.py") file:<br />
 	`[*] Usage: python test.py dataset.csv multitest`<br />
-	This test runs the [main.py](src/main.py "main.py") many times and creates a .csv file containing all the average values of the ncp of each table, saved in the **final_table** folder <br />
+	This test runs the [main.py](src/main.py "main.py") many times and creates a .csv file containing all the average values of the ncp of each table, saved in the [final_table](final_table "final_table") folder <br />
 
 - Plot<br />
 	Run the [test.py](src/test.py "test.py") file:<br />
