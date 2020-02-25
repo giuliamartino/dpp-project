@@ -121,18 +121,18 @@ if __name__ == "__main__":
         file_name = m.sys.argv[1]
         
         # Testing
-        # multiple_tests(file_name=file_name)
+        multiple_tests(file_name=file_name)
         
         # Plotting
-        if file_name == "UrbanPopulation.csv":
-            n_columns = 56
-        elif file_name == "Products.csv":
-            n_columns = 52
-        elif file_name == "ExoTest.csv":
-            n_columns = 50
-        else:
-            m.logger.info("Wrong file")
-        plot_tests(file_name=file_name, n_columns=n_columns)
+        # if file_name == "UrbanPopulation.csv":
+        #     n_columns = 56
+        # elif file_name == "Products.csv":
+        #     n_columns = 52
+        # elif file_name == "ExoTest.csv":
+        #     n_columns = 50
+        # else:
+        #     m.logger.info("Wrong file")
+        # plot_tests(file_name=file_name, n_columns=n_columns)
 
     else:
         print("[*] Usage: python test.py dataset.csv")
