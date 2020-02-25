@@ -140,4 +140,4 @@ class Dataset:
             for column in range(0, len(y[row])):
                 step = (z[row][column] - y[row][column]) / (col_max[column] - col_min[column])
                 ncp += step
-        return ncp / len(y)
+        return ncp / (len(y) * len(y[0]))

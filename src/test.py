@@ -52,9 +52,8 @@ def save_ncp_table(file_name=None, ncp_table=None):
             string = separator.join(map(str, row)) 
             f.write(string + "\n")
 
-def plot_tests(file_name=None, n_columns=None):
+def plot_tests(file_name=None):
     ncp_table = read_ncp_table(file_name)
-    ncp_table['ncp'] = ncp_table['ncp'].apply(lambda x: x / n_columns)
     paa_value, max_level = get_best_values(ncp_table)
 
     best_rows = list()
@@ -128,15 +127,7 @@ if __name__ == "__main__":
         
         # Plotting
         if m.sys.argv[2]=="plot":
-            if file_name == "UrbanPopulation.csv":
-                n_columns = 56
-            elif file_name == "Products.csv":
-                n_columns = 52
-            elif file_name == "ExoTest.csv":
-                n_columns = 50
-            else:
-                m.logger.info("Wrong file")
-            plot_tests(file_name=file_name, n_columns=n_columns)
+            plot_tests(file_name=file_name)
 
     else:
         print("[*] Usage: python test.py dataset.csv plot / multitest")
