@@ -52,8 +52,9 @@ def save_ncp_table(file_name=None, ncp_table=None):
             string = separator.join(map(str, row)) 
             f.write(string + "\n")
 
-def plot_tests(file_name=None):
+def plot_tests(file_name=None, n_columns=None):
     ncp_table = read_ncp_table(file_name)
+    ncp_table['ncp'] = ncp_table['ncp'].apply(lambda x: x / n_columns)
     paa_value, max_level = get_best_values(ncp_table)
 
     best_rows = list()
@@ -74,7 +75,7 @@ def plot_3d(best_rows=None):
 
     # Plot surface
     # pylint: disable=no-member
-    # surf = ax.plot_trisurf(x, y, z,cmap=cm.CMRmap, linewidth=0.1)
+    # surf = ax.plot_trisurf(x, y, z,cmap=cm.jet, linewidth=0.1)
     # fig.colorbar(surf, shrink=0.5, aspect=5)
 
     # Plot only points
@@ -118,6 +119,20 @@ if __name__ == "__main__":
 
     if len(m.sys.argv) == 2:
         file_name = m.sys.argv[1]
-        multiple_tests(file_name=file_name)
+        
+        # Testing
+        # multiple_tests(file_name=file_name)
+        
+        # Plotting
+        if file_name == "UrbanPopulation.csv":
+            n_columns = 56
+        elif file_name == "Products.csv":
+            n_columns = 52
+        elif file_name == "ExoTest.csv":
+            n_columns = 50
+        else:
+            m.logger.info("Wrong file")
+        plot_tests(file_name=file_name, n_columns=n_columns)
+
     else:
         print("[*] Usage: python test.py dataset.csv")
