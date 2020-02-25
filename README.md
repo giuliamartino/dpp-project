@@ -1,5 +1,19 @@
 ## Project for Data Protection and Privacy - Time Series Anonymization with (k,P)-anonymity
-## Usage
+
+## Requirements <br /> 
+- numpy v1.16.4 <br />
+- pandas v0.25.0 <br />
+- loguru v0.3.2 <br /> 
+- saxpy v1.0.1.dev167 <br />
+- matplotlib v3.1.3 <br />
+
+## Datasets <br />
+In the [datasets](/datasets "datasets") folder there are three different datasets. All dataset, to be used, must be **.csv** and must have the columns name in the first row. <br />
+Our example datasets: <br />
+- [ExoTest.csv](datasets/ExoTest.csv "ExoTest.csv") <br />
+- [Products.csv](datasets/Products.csv "Products.csv") <br />
+- [UrbanPopulation.csv](datasets/UrbanPopulation.csv "UrbanPopulation.csv") <br />
+## Usage <br />
 - Single test <br />
 	Run the **main.py** file:<br />
 	`[*] Usage: python kp-anonymity.py k_value p_value paa_value max_level dataset.csv`<br />
@@ -19,5 +33,12 @@
 	The program chooses the max_level and paa_value pair that has the best ncp, than it plots only tuples with that data.<br />
   
    <img src="IMG/plot_ExoTest.jpg" alt="Plot" width="300"/>
+
+## Explain Parameters <br />
+- k_value: value of k-anonymity <br />
+- p_value: value of p-anonymity, the pattern <br />
+- paa_value: quantity of letters that can be used to describe the pattern <br />
+- max_level: number of letters that can be used to describe the pattern <br />
+
    
 
