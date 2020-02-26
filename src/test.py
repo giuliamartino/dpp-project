@@ -61,47 +61,47 @@ def plot_tests(file_name=None):
         if ncp_table.values[i][2] == paa_value and ncp_table.values[i][3] == max_level:
             best_rows.append(ncp_table.values[i])
     
-    plot_3d(best_rows)
+    plot_results(best_rows)
 
-def plot_3d(best_rows=None):
+def plot_results(best_rows=None):
     trasp_array=list(map(list, zip(*best_rows)))
     x=trasp_array[0]
     y=trasp_array[1]
     z=trasp_array[4]
-
-    fig = plt.figure()
-    #ax = Axes3D(fig)
+    
+    # fig = plt.figure()
+    # ax = Axes3D(fig)
+    # ax.set_xlabel('k_value')
+    # ax.set_ylabel('p_value')
+    # ax.set_zlabel('ncp')
 
     # Plot surface
     # pylint: disable=no-member
-    #surf = ax.plot_trisurf(x, y, z,cmap=cm.jet, linewidth=0.1)
-    #fig.colorbar(surf, shrink=0.5, aspect=5)
-    #surf = ax.plot_trisurf(x, y, z,cmap=cm.jet, linewidth=0.1)
+    # surf = ax.plot_trisurf(x, y, z,cmap=cm.jet, linewidth=0.1)
+    # fig.colorbar(surf, shrink=0.5, aspect=5)
+    # surf = ax.plot_trisurf(x, y, z,cmap=cm.jet, linewidth=0.1)
 
-    #plot lines with k fixed
-    #last=1
-    #for i in range(2,10):
+    # Plot lines with k fixed
+    # last=1
+    # for i in range(2,10):
     #    ax.plot(x[last:last+i], y[last:last+i], z[last:last+i])
     #    last+=i
         
-
     # Plot only points
-    #ax.scatter(x, y, z)
+    # ax.scatter(x, y, z)
 
-    #plot colored points
+    # Plot colored points
     plt.scatter(x, y, c=z, s=100, cmap=cm.jet)
     cbar=plt.colorbar()
     plt.xlabel('k_value')
     plt.ylabel('p_value')
     cbar.set_label('ncp')
     
-    #ax.set_xlabel('k_value')
-    #ax.set_ylabel('p_value')
-    #ax.set_zlabel('ncp')
+    plt.show()
+    
     # Save the file
     # plt.savefig('test.pdf')
-    plt.show()
-
+    
 def read_ncp_table(file_name=None):
     if os.path.isfile("final_table\\" + file_name.replace(".csv", "") + "_out.csv"):
         return m.pd.read_csv("final_table\\" + file_name.replace(".csv", "") + "_out.csv")
