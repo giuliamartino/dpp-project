@@ -39,7 +39,7 @@ def main(k_value=None, p_value=None, paa_value=None, max_level=None, file_name=N
     # The function iterrows returns both index of the row and content of the current row
     # pylint: disable=W0612
     for index, row in time_series.iterrows():
-        if file_name == "Products.csv":
+        if file_name == "Dataset.csv":
             time_series_dict[row["Product_Code"]] = list(row["W0":"W51"])
         elif file_name == "UrbanPopulation.csv":
             time_series_dict[row["CountryCode"]] = list(row["1960":"2015"])
