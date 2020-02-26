@@ -8,8 +8,8 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "args": [
-                "ExoTest.csv",
-                "plot"]
+                "Products.csv",
+                "multitest"]
         }
     ]
 }
