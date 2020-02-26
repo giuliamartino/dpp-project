@@ -37,8 +37,8 @@ Our example datasets: <br />
 ## Explain Parameters <br />
 - k_value: value of k-anonymity <br />
 - p_value: value of p-anonymity, the pattern <br />
-- paa_value: quantity of letters that can be used to describe the pattern <br />
-- max_level: number of letters that can be used to describe the pattern <br />
+- paa_value: length of the string that can be used to describe the pattern <br />
+- max_level: number of letters in the alphabet used to describe the pattern <br />
 
    
 
