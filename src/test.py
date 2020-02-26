@@ -88,7 +88,7 @@ def plot_3d(best_rows=None):
     # Plot only points
     #ax.scatter(x, y, z)
 
-    
+    #plot colored points
     plt.scatter(x, y, c=z, s=100, cmap=cm.jet)
     cbar=plt.colorbar()
     plt.xlabel('k_value')
