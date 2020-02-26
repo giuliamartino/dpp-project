@@ -70,21 +70,34 @@ def plot_3d(best_rows=None):
     z=trasp_array[4]
 
     fig = plt.figure()
-    ax = Axes3D(fig)
+    #ax = Axes3D(fig)
 
     # Plot surface
     # pylint: disable=no-member
-    # surf = ax.plot_trisurf(x, y, z,cmap=cm.jet, linewidth=0.1)
-    # fig.colorbar(surf, shrink=0.5, aspect=5)
-    surf = ax.plot_trisurf(x, y, z,cmap=cm.jet, linewidth=0.1)
-    fig.colorbar(surf, shrink=0.5, aspect=5)
+    #surf = ax.plot_trisurf(x, y, z,cmap=cm.jet, linewidth=0.1)
+    #fig.colorbar(surf, shrink=0.5, aspect=5)
+    #surf = ax.plot_trisurf(x, y, z,cmap=cm.jet, linewidth=0.1)
+
+    #plot lines with k fixed
+    #last=1
+    #for i in range(2,10):
+    #    ax.plot(x[last:last+i], y[last:last+i], z[last:last+i])
+    #    last+=i
+        
 
     # Plot only points
-    ax.scatter(x, y, z)
+    #ax.scatter(x, y, z)
+
     
-    ax.set_xlabel('k_value')
-    ax.set_ylabel('p_value')
-    ax.set_zlabel('ncp')
+    plt.scatter(x, y, c=z, s=100, cmap=cm.jet)
+    cbar=plt.colorbar()
+    plt.xlabel('k_value')
+    plt.ylabel('p_value')
+    cbar.set_label('ncp')
+    
+    #ax.set_xlabel('k_value')
+    #ax.set_ylabel('p_value')
+    #ax.set_zlabel('ncp')
     # Save the file
     # plt.savefig('test.pdf')
     plt.show()
