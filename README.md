@@ -8,9 +8,8 @@
 - matplotlib v3.1.3 <br />
 
 ## Datasets <br />
-In the [datasets](/datasets "datasets") folder there are three different example datasets. All dataset must be **.csv** and must have the columns name in the first row. <br />
+In the [datasets](/datasets "datasets") folder there are two different example datasets. All dataset must be **.csv** and must have the columns name in the first row. <br />
 Our example datasets: <br />
-- [ExoTest.csv](datasets/ExoTest.csv "ExoTest.csv") <br />
 - [Products.csv](datasets/Products.csv "Products.csv") <br />
 - [UrbanPopulation.csv](datasets/UrbanPopulation.csv "UrbanPopulation.csv") <br />
 ## Usage <br />
@@ -29,10 +28,10 @@ Our example datasets: <br />
 	Run the [test.py](src/test.py "test.py") file:<br />
 	`[*] Usage: python test.py dataset.csv plot`<br />
 	This test can be done only if you have an output in [final_table](final_table "final_table") folder.<br />
-	This test plots in a three-dimensional chart the output data from **multiple test** step.<br />
+	This test plots the output data from **multiple test** step in a three-dimensional or bi-dimensional chart.<br />
 	The program chooses the pair (paa_value, max_level) that produces the best NCP. Then it plots only tuples with that values of the pair (paa_value, max_level).<br />
   
-   <img src="IMG/plot_ExoTest.jpg" alt="Plot" width="300"/>
+   <img src="IMG/plot_Dataset.jpg" alt="Plot" width="300"/>
 
 ## Explain Parameters <br />
 - k_value: value of k-anonymity <br />
